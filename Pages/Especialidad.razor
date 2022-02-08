@@ -28,7 +28,7 @@ else
             @foreach (var RecorridoEspecial in EspecialidadFor)
             {
                 <tr>
-                    <td>@EspecialidadFor.Nombre</td>
+                    <td>@RecorridoEspecial.Nombre</td>
                 </tr>
             }
         </tbody>
@@ -41,6 +41,6 @@ else
 
     protected override async Task OnInitializedAsync()
     {
-        TurnoFor = await http.GetFromJsonAsync<IList<EspecialidadModel>>(api);
+        EspecialidadFor = await http.GetFromJsonAsync<IList<EspecialidadModel>>(api);
     }
 }

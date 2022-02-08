@@ -31,7 +31,7 @@ else
             {
                 <tr>
                     <td>@RecorridoComentario.IdAsesor</td>
-                    <td>@RecorridoComentario.Nombre + @RecorridoComentario.Apellidos</td>
+                    <td>@RecorridoComentario.Nombre @RecorridoComentario.Apellidos</td>
                     <td>@RecorridoComentario.Descripcion</td>
                 </tr>
             }
@@ -45,6 +45,6 @@ else
 
     protected override async Task OnInitializedAsync()
     {
-        TurnoFor = await http.GetFromJsonAsync<IList<ComentarioModel>>(api);
+        ComentarioFor = await http.GetFromJsonAsync<IList<ComentarioModel>>(api);
     }
 }

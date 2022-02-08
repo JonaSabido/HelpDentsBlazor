@@ -45,6 +45,7 @@ else
                     <td>@RecorridoAsesor.Costo</td>
                     <td>@RecorridoAsesor.Telefono</td>
                     <td>@RecorridoAsesor.Facebook</td>
+                    <td>@RecorridoAsesor.Instagram</td>
                     <td>@RecorridoAsesor.Youtube</td>
                     <td>@RecorridoAsesor.Twitter</td>
                     <td>@RecorridoAsesor.Descripcion</td>
@@ -60,6 +61,6 @@ else
 
     protected override async Task OnInitializedAsync()
     {
-        TurnoFor = await http.GetFromJsonAsync<IList<AsesorModel>>(api);
+        AsesorFor = await http.GetFromJsonAsync<IList<AsesorModel>>(api);
     }
 }
