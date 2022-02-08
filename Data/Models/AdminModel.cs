@@ -1,7 +1,4 @@
-﻿using HelpDentsProyecto.Data;
-using HelpDentsProyecto.Data.Models;
-using HelpDentsProyecto.Pages;
-namespace HelpDentsProyecto.Data.Models
+﻿namespace HelpDentsProyecto.Data.Models
 {
     public class AdminModel
     {

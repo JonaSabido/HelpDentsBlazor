@@ -1,0 +1,46 @@
+@page "/Especialidad"
+
+<PageTitle>Especialidad</PageTitle>
+
+@using HelpDentsProyecto.Data
+@using HelpDentsProyecto.Data.Models
+@using System.Net.Http
+@using System.Net.Http.Json
+@inject HttpClient http
+
+<h1>Especialidad</h1>
+
+<p>This component demonstrates fetching data from a service.</p>
+
+@if (EspecialidadFor == null)
+{
+    <p><em>Loading...</em></p>
+}
+else
+{
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Especialidad</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var RecorridoEspecial in EspecialidadFor)
+            {
+                <tr>
+                    <td>@EspecialidadFor.Nombre</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+
+@code {
+    private readonly string api = "api/Especialidad/all";
+    private IList<EspecialidadModel>? EspecialidadFor;
+
+    protected override async Task OnInitializedAsync()
+    {
+        TurnoFor = await http.GetFromJsonAsync<IList<EspecialidadModel>>(api);
+    }
+}
