@@ -1,0 +1,46 @@
+﻿@page "/Turno"
+
+<PageTitle>Turno</PageTitle>
+
+@using HelpDentsProyecto.Data
+@using HelpDentsProyecto.Data.Models
+@using System.Net.Http
+@using System.Net.Http.Json
+@inject HttpClient http
+
+<h1>Turno</h1>
+
+<p>This component demonstrates fetching data from a service.</p>
+
+@if (TurnoFor == null)
+{
+    <p><em>Loading...</em></p>
+}
+else
+{
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Turno</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var RecorridoTurno in TurnoFor)
+            {
+                <tr>
+                    <td>@RecorridoTurno.Nombre</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+
+@code {
+    private readonly string api = "api/Turno/all";
+    private IList<TurnoModel>? TurnoFor;
+
+    protected override async Task OnInitializedAsync()
+    {
+        TurnoFor = await http.GetFromJsonAsync<IList<TurnoModel>>(api);
+    }
+}
