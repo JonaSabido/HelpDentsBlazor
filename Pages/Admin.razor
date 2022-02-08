@@ -1,0 +1,52 @@
+﻿@page "/Admin"
+
+<PageTitle>Admin</PageTitle>
+
+@using HelpDentsProyecto.Data
+@using HelpDentsProyecto.Data.Models
+@using System.Net.Http
+@using System.Net.Http.Json
+@inject HttpClient http
+
+<h1>Admin</h1>
+
+<p>This component demonstrates fetching data from a service.</p>
+
+@if (AdminFor == null)
+{
+    <p><em>Loading...</em></p>
+}
+else
+{
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Nombres</th>
+                <th>Apellidos</th>
+                <th>Correo</th>
+                <th>Contraseña</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var RecorridoAdmin in AdminFor)
+            {
+                <tr>
+                    <td>@RecorridoAdmin.Nombres</td>
+                    <td>@RecorridoAdmin.Apellidos</td>
+                    <td>@RecorridoAdmin.Correo</td>
+                    <td>@RecorridoAdmin.Contraseña</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+
+@code {
+    private readonly string api = "api/Administrador/all";
+    private IList<AdminModel>? AdminFor;
+
+    protected override async Task OnInitializedAsync()
+    {
+        AdminFor = await http.GetFromJsonAsync<IList<AdminModel>>(api);
+    }
+}
