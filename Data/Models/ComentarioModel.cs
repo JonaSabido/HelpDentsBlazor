@@ -1,6 +1,6 @@
 namespace HelpDentsProyecto.Data.Models
 {
-    public class TurnoModel
+    public class ComentarioModel
     {
         public int? IdAsesor{get; set;}
         public string? Nombres{get; set;}
