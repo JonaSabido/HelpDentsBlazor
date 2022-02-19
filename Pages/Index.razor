@@ -8,10 +8,13 @@
 <PageTitle>Home</PageTitle>
 
 <h1>Bienvenido Administrador</h1>
+<link rel="stylesheet" href="~/css/index.css" />
 
 
 <SurveyPrompt Title="La mision de HelpDents es ser un apoyo para los estudiantes" />
 
+<br />
+<br />
 
 <h2> Asesores recientes </h2>
 @if (AsesorFor == null)
@@ -51,6 +54,9 @@ else
     </table>
 }
 
+<br />
+<br />
+
 <h2> Comentarios recientes </h2>
 @if (ComentarioFor == null)
 {
@@ -85,6 +91,9 @@ else
         </tbody>
     </table>
 }
+
+<br />
+<br />
 
 <h2> Usuarios recientes </h2>
 @if (UsuarioFor == null)
@@ -127,31 +136,19 @@ else
 @code {
     private readonly string api = "api/Asesor/all";
     private IList<AsesorModel>? AsesorFor;
+    private readonly string api2 = "api/Usuario/all";
+    private IList<UsuarioModel>? UsuarioFor;
+    private readonly string api3 = "api/Comentario/all";
+    private IList<ComentarioModel>? ComentarioFor;
 
     protected override async Task OnInitializedAsync()
     {
         AsesorFor = await http.GetFromJsonAsync<IList<AsesorModel>>(api);
-    }
-}
-
-@code {
-    private readonly string api2 = "api/Usuario/all";
-    private IList<UsuarioModel>? UsuarioFor;
-
-    protected async Task OnInitializedAsync2()
-    {
         UsuarioFor = await http.GetFromJsonAsync<IList<UsuarioModel>>(api2);
-    }
-}
-
-@code {
-    private readonly string api3 = "api/Comentario/all";
-    private IList<ComentarioModel>? ComentarioFor;
-
-    protected async Task OnInitializedAsync3()
-    {
         ComentarioFor = await http.GetFromJsonAsync<IList<ComentarioModel>>(api3);
     }
+
+   
 }
 
 
