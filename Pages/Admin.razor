@@ -8,7 +8,18 @@
 @using System.Net.Http.Json
 @inject HttpClient http
 
-<h1>Admin</h1>
+<div class="tittle">
+    <div class="tittle_content">
+        <h1>Usuario</h1>
+    </div>
+    <div class="tittle_btn">
+        <a href="/Admin/add" class="btn btn-success">
+        <i class="oi oi-plus"></i>
+        &nbsp
+        Agregar
+        </a>
+    </div>
+</div>
 
 <p>This component demonstrates fetching data from a service.</p>
 
@@ -21,20 +32,32 @@ else
     <table class="table">
         <thead>
             <tr>
+                <th>Id</th>
                 <th>Nombres</th>
                 <th>Apellidos</th>
                 <th>Correo</th>
                 <th>Contraseña</th>
+                <th>Opciones</th>
             </tr>
         </thead>
         <tbody>
             @foreach (var RecorridoAdmin in AdminFor)
             {
                 <tr>
+                    <td>@RecorridoAdmin.Id</td>
                     <td>@RecorridoAdmin.Nombres</td>
                     <td>@RecorridoAdmin.Apellidos</td>
                     <td>@RecorridoAdmin.Correo</td>
                     <td>@RecorridoAdmin.Contraseña</td>
+                    <td>
+                        <span class="icon">
+                            <a href="/Admin/update/@RecorridoAdmin.Id" class="oi oi-pencil" title="Editar"></a>
+                        </span>
+                        &nbsp
+                        <span class="icon">
+                            <a href="/Admin/delete/@RecorridoAdmin.Id" class="oi oi-trash" title="Eliminar"></a>
+                        </span>
+                    </td>
                 </tr>
             }
         </tbody>

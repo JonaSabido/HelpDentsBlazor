@@ -1,0 +1,10 @@
+﻿.tittle{
+    display : flex;
+    justify-content: space-between;
+    &_content{
+        color: initial;
+    }
+    &_btn{
+        margin: auto 0;
+    }
+}
