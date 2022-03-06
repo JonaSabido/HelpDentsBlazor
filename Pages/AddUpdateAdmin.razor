@@ -12,7 +12,9 @@
 <PageTitle>@(isUpdate ? $"Editar Admin[Id:{admin.Id}]" : "Agregar Administrador") </PageTitle>
 <h1>@(isUpdate ? $"Editar Admin[Id:{admin.Id}]" : "Agregar Administrador")</h1>
 
-<EditForm Model="@admin">
+
+
+<EditForm Model="@admin"> 
     <form class="container border" @onsubmit="Save">
         <div class="mb-2">
             <label class="form-label" for="name">Nombres</label>
@@ -22,17 +24,19 @@
             <label class="form-label" for="name">Apellidos</label>
             <InputText class="form-control" @bind-Value="@admin.Apellidos" id="Apellidos"></InputText>
         </div>
-         <div class="mb-2">
-            <label class="form-label" for="name">Correo</label>
-            <InputText class="form-control" @bind-Value="@admin.Correo" id="Correo"></InputText>
-        </div>
+        @if(isUpdate == false){
+            <div class="mb-2"> 
+                <label class="form-label" for="name"> Correo</label>
+                <InputText class="form-control" @bind-Value="@admin.Correo" id="Correo"></InputText>
+            </div>
+        }
          <div class="mb-2">
             <label class="form-label" for="name">Contraseña</label>
-            <InputText class="form-control" @bind-Value="@admin.Contraseña" id="Contraseña"></InputText>
+            <InputText type="password" class="form-control" @bind-Value="@admin.Contraseña" id="Contraseña"></InputText>
         </div>
         <button type="submit" class="btn btn-primary">Guardar</button>
         <a class="btn btn-danger" href="/Admin">Cancelar</a>
-    </form>
+    </form> 
 </EditForm>
 
 
@@ -50,7 +54,7 @@
         isUpdate = id != 0;
         if (isUpdate)
         {
-            var response = await http.GetFromJsonAsync<AdminModel>($"api/Administrador/{admin.Id}");
+            var response = await http.GetFromJsonAsync<AdminModel>($"api/Administrador/{id}");
             if (response != null)
             {
                 admin = response;
@@ -71,8 +75,13 @@
         {
             response = await http.PostAsJsonAsync<AdminModel>("api/Administrador", admin!);
         }
-        AdminModel? saved = response.Content.ReadFromJsonAsync<AdminModel>().Result;
-            NavigationManager.NavigateTo("/Admin");
+        
+        NavigationManager.NavigateTo("/Admin");
+        
+
     }
+
+
+
 }
 

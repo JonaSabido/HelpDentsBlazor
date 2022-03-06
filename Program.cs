@@ -8,8 +8,11 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddRazorPages();
 builder.Services.AddServerSideBlazor();
 builder.Services.AddSingleton<WeatherForecastService>();
+
 var clientHandler = new HttpClientHandler();
-clientHandler.ServerCertificateCustomValidationCallback = (message, cert, chain, errors) => true;
+clientHandler.ServerCertificateCustomValidationCallback = 
+    (message, cert, chain, errors) => true;
+
 builder.Services.AddSingleton(new HttpClient(clientHandler) {
     BaseAddress = new Uri("https://localhost:5001")
 });

@@ -10,11 +10,11 @@
 
 <div class="tittle">
     <div class="tittle_content">
-        <h1> Usuario</h1>
+        <h1>Usuario</h1>
     </div>
     <div class="tittle_btn">
-        <a href="" class="btn btn-success">
-        <i class="oi oioi-plus"></i>
+        <a href="/Usuario/add" class="btn btn-success">
+        <i class="oi oi-plus"></i>
         &nbsp
         Agregar
         </a>
@@ -33,6 +33,7 @@ else
     <table class="table">
         <thead>
             <tr>
+                <th>Id</th>
                 <th>Nombres</th>
                 <th>Apellidos</th>
                 <th>Correo</th>
@@ -43,6 +44,7 @@ else
             @foreach (var UsuarioRecorrido in UsuarioFor)
             {
                 <tr>
+                    <td>@UsuarioRecorrido.Id</td>
                     <td>@UsuarioRecorrido.Nombres</td>
                     <td>@UsuarioRecorrido.Apellidos</td>
                     <td>@UsuarioRecorrido.Correo</td>

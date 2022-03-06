@@ -1,0 +1,34 @@
+﻿@page "/Admin/delete/{id:int}"
+
+<PageTitle>Borrar Administrador</PageTitle>
+
+<h1> ¿Esta seguro que desea eliminar al administrador <b> @administrador?.Nombres ?</b> </h1>
+<br />
+<button  class="btn btn-primary" @onclick = "ConfirmDelete">Confirmar</button>
+<a class="btn btn-danger" href="/Admin">Cancelar</a>
+
+
+@using HelpDentsProyecto.Data.Models
+@using System.Net.Http
+@using System.Net.Http.Json
+@inject HttpClient http
+@inject NavigationManager NavigationManager
+
+@code{
+    [Parameter]
+    
+    public int id {get; set;}
+
+    AdminModel? administrador;
+
+    protected override async Task OnInitializedAsync(){
+        administrador = await http.GetFromJsonAsync<AdminModel>($"api/Administrador/{id}");
+    }
+    private async Task ConfirmDelete(){
+        var response = await http.DeleteAsync($"api/Administrador/{id}");
+        if(response.IsSuccessStatusCode){
+            NavigationManager.NavigateTo("/Admin");
+        }
+    }
+
+}
