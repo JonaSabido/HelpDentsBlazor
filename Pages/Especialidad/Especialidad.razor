@@ -32,6 +32,7 @@ else
     <table class="table">
         <thead>
             <tr>
+                <th>Id</th>
                 <th>Especialidad</th>
             </tr>
         </thead>
@@ -39,7 +40,17 @@ else
             @foreach (var RecorridoEspecial in EspecialidadFor)
             {
                 <tr>
+                    <td>@RecorridoEspecial.Id</td>
                     <td>@RecorridoEspecial.Nombre</td>
+                    <td>
+                        <span class="icon">
+                            <a href="/Especialidad/update/@RecorridoEspecial.Id" class="oi oi-pencil" title="Editar"></a>
+                        </span>
+                        &nbsp
+                        <span class="icon">
+                            <a href="/Especialidad/delete/@RecorridoEspecial.Id" class="oi oi-trash" title="Eliminar"></a>
+                        </span>
+                    </td>
                 </tr>
             }
         </tbody>

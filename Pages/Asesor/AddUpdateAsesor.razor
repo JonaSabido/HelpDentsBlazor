@@ -1,0 +1,105 @@
+﻿@page "/Asesor/add"
+@page "/Asesor/update/{Id:int}"
+
+@using System.Net.Http
+@using System.Net.Http.Json
+@using HelpDentsProyecto.Data.Models
+@using HelpDentsProyecto.Data
+@inject HttpClient http
+@inject NavigationManager NavigationManager
+
+
+<PageTitle>@(isUpdate ? $"Editar Asesor[Id:{asesor.Id}]" : "Agregar Asesor") </PageTitle>
+<h1>@(isUpdate ? $"Editar Asesor[Id:{asesor.Id}]" : "Agregar Asesor")</h1>
+
+
+
+<EditForm Model="@asesor"> 
+    <form class="container border" @onsubmit="Save">
+       
+        @if (isUpdate == false)
+        {
+            <div class="mb-2">
+                <label class="form-label" for="name">IdUsuario</label>
+            <input type="number" class="form-control" @bind-value="@asesor.UsuarioIdUsuario" id="Nombres" required></input>
+            </div>
+        }
+            <div class="mb-2"> 
+                <label class="form-label" for="name"> Costo</label>
+                <input type="number" step="any" class="form-control" @bind-value="@asesor.Costo" id="Costo" required/>
+            </div>
+         <div class="mb-2">
+            <label class="form-label" for="name">Telefono</label>
+            <input type="text" class="form-control" @bind-value="@asesor.Telefono" id="Telefono"></input>
+        </div>
+        <div class="mb-2">
+            <label class="form-label" for="name">Facebook</label>
+            <InputText class="form-control" @bind-Value="@asesor.Facebook" id="Telefono"></InputText>
+        </div>
+        <div class="mb-2">
+            <label class="form-label" for="name">Instagram</label>
+            <InputText class="form-control" @bind-Value="@asesor.Instagram" id="Telefono"></InputText>
+        </div>
+        <div class="mb-2">
+            <label class="form-label" for="name">YouTube</label>
+            <InputText class="form-control" @bind-Value="@asesor.Youtube" id="Telefono"></InputText>
+        </div>
+        <div class="mb-2">
+            <label class="form-label" for="name">Twitter</label>
+            <InputText class="form-control" @bind-Value="@asesor.Twitter" id="Telefono"></InputText>
+        </div>
+        <div class="mb-2">
+            <label class="form-label" for="name">Descripcion</label>
+            <InputText class="form-control" @bind-Value="@asesor.Descripcion" id="Telefono"></InputText>
+        </div>
+        <button type="submit" class="btn btn-primary">Guardar</button>
+        <a class="btn btn-danger" href="/Asesor">Cancelar</a>
+    </form> 
+</EditForm>
+
+
+
+
+@code {
+    [Parameter]
+    public int id { get; set; }
+    public bool isUpdate { get; set; } = false;
+    bool loading = true;
+    AsesorModel asesor = new AsesorModel();
+
+    protected override async Task OnInitializedAsync()
+    {
+        isUpdate = id != 0;
+        if (isUpdate)
+        {
+            var response = await http.GetFromJsonAsync<AsesorModel>($"api/Asesor/{id}");
+            if (response != null)
+            {
+                asesor = response;
+            }
+
+        }
+        loading = false;
+    }
+
+    protected async Task Save()
+    {
+        HttpResponseMessage? response;
+        if (isUpdate)
+        {
+            response = await http.PutAsJsonAsync<AsesorModel>($"api/Asesor/{id}", asesor!);
+        }
+        else
+        {
+            response = await http.PostAsJsonAsync<AsesorModel>("api/Asesor", asesor!);
+        }
+        
+        NavigationManager.NavigateTo("/Asesor");
+        
+
+    }
+
+
+
+}
+

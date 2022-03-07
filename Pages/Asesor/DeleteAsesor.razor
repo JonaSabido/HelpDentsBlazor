@@ -1,0 +1,34 @@
+﻿@page "/Asesor/delete/{id:int}"
+
+<PageTitle>Borrar Asesor</PageTitle>
+
+<h1> ¿Esta seguro que desea eliminar al asesor <b> @asesor?.Nombres ?</b> </h1>
+<br />
+<button  class="btn btn-primary" @onclick = "ConfirmDelete">Confirmar</button>
+<a class="btn btn-danger" href="/Asesor">Cancelar</a>
+
+
+@using HelpDentsProyecto.Data.Models
+@using System.Net.Http
+@using System.Net.Http.Json
+@inject HttpClient http
+@inject NavigationManager NavigationManager
+
+@code{
+    [Parameter]
+    
+    public int id {get; set;}
+
+    AsesorModel? asesor;
+
+    protected override async Task OnInitializedAsync(){
+        asesor = await http.GetFromJsonAsync<AsesorModel>($"api/Asesor/{id}");
+    }
+    private async Task ConfirmDelete(){
+        var response = await http.DeleteAsync($"api/Asesor/{id}");
+        if(response.IsSuccessStatusCode){
+            NavigationManager.NavigateTo("/Asesor");
+        }
+    }
+
+}

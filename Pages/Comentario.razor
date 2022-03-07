@@ -21,7 +21,7 @@ else
     <table class="table">
         <thead>
             <tr>
-                <th>IdAsesor</th>
+                <th>Id</th>
                 <th>Usuario</th>
                 <th>Descripcion</th>
             </tr>
@@ -30,7 +30,7 @@ else
             @foreach (var RecorridoComentario in ComentarioFor)
             {
                 <tr>
-                    <td>@RecorridoComentario.IdAsesor</td>
+                    <td>@RecorridoComentario.Id</td>
                     <td>@RecorridoComentario.Nombres @RecorridoComentario.Apellidos</td>
                     <td>@RecorridoComentario.Descripcion</td>
                 </tr>

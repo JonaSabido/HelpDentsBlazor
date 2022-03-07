@@ -21,6 +21,7 @@ else
     <table class="table">
         <thead>
             <tr>
+                <th>Id</th>
                 <th>Turno</th>
             </tr>
         </thead>
@@ -28,6 +29,7 @@ else
             @foreach (var RecorridoTurno in TurnoFor)
             {
                 <tr>
+                    <td>@RecorridoTurno.Id</td>
                     <td>@RecorridoTurno.Nombre</td>
                 </tr>
             }

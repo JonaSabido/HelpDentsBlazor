@@ -8,7 +8,18 @@
 @using System.Net.Http.Json
 @inject HttpClient http
 
-<h1>Asesor</h1>
+<div class="tittle">
+    <div class="tittle_content">
+        <h1>Asesor</h1>
+    </div>
+    <div class="tittle_btn">
+        <a href="/Asesor/add" class="btn btn-success">
+        <i class="oi oi-plus"></i>
+        &nbsp
+        Agregar
+        </a>
+    </div>
+</div>
 
 <p>This component demonstrates fetching data from a service.</p>
 
@@ -21,10 +32,10 @@ else
     <table class="table">
         <thead>
             <tr>
+                <th>Id</th>
+                <th> Id Usuario</th>
                 <th>Nombres</th>
                 <th>Apellidos</th>
-                <th>Especialidad</th>
-                <th>Turno</th>
                 <th>Costo</th>
                 <th>Telefono</th>
                 <th>Facebook</th>
@@ -38,10 +49,10 @@ else
             @foreach (var RecorridoAsesor in AsesorFor)
             {
                 <tr>
+                    <td>@RecorridoAsesor.Id</td>
+                    <td> @RecorridoAsesor.UsuarioIdUsuario</td>
                     <td>@RecorridoAsesor.Nombres</td>
                     <td>@RecorridoAsesor.Apellidos</td>
-                    <td>@RecorridoAsesor.Especialidad</td>
-                    <td>@RecorridoAsesor.Turno</td>
                     <td>@RecorridoAsesor.Costo</td>
                     <td>@RecorridoAsesor.Telefono</td>
                     <td>@RecorridoAsesor.Facebook</td>
@@ -49,6 +60,15 @@ else
                     <td>@RecorridoAsesor.Youtube</td>
                     <td>@RecorridoAsesor.Twitter</td>
                     <td>@RecorridoAsesor.Descripcion</td>
+                    <td>
+                        <span class="icon">
+                            <a href="/Asesor/update/@RecorridoAsesor.Id" class="oi oi-pencil" title="Editar"></a>
+                        </span>
+                        &nbsp
+                        <span class="icon">
+                            <a href="/Asesor/delete/@RecorridoAsesor.Id" class="oi oi-trash" title="Eliminar"></a>
+                        </span>
+                    </td>
                 </tr>
             }
         </tbody>

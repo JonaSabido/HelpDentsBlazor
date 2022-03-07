@@ -1,0 +1,34 @@
+﻿@page "/Especialidad/delete/{id:int}"
+
+<PageTitle>Borrar Especialidad</PageTitle>
+
+<h1> ¿Esta seguro que desea eliminar la Especialidad <b> @esp?.Nombre ?</b> </h1>
+<br />
+<button  class="btn btn-primary" @onclick = "ConfirmDelete">Confirmar</button>
+<a class="btn btn-danger" href="/Especialidad">Cancelar</a>
+
+
+@using HelpDentsProyecto.Data.Models
+@using System.Net.Http
+@using System.Net.Http.Json
+@inject HttpClient http
+@inject NavigationManager NavigationManager
+
+@code{
+    [Parameter]
+    
+    public int id {get; set;}
+
+    EspecialidadModel? esp;
+
+    protected override async Task OnInitializedAsync(){
+        esp = await http.GetFromJsonAsync<EspecialidadModel>($"api/Especialidad/{id}");
+    }
+    private async Task ConfirmDelete(){
+        var response = await http.DeleteAsync($"api/Especialidad/{id}");
+        if(response.IsSuccessStatusCode){
+            NavigationManager.NavigateTo("/Especialidad");
+        }
+    }
+
+}

@@ -1,7 +1,11 @@
+using System.ComponentModel.DataAnnotations;
+
 namespace HelpDentsProyecto.Data.Models
 {
     public class AsesorModel
     {
+        public int Id { get; set; }
+        public int UsuarioIdUsuario { get; set; }
         public string? Nombres{get; set;}
         public string? Apellidos{get; set;}
         public string? Especialidad{get; set;}
