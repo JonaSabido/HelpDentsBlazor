@@ -24,12 +24,12 @@
             <label class="form-label" for="name">Apellidos</label>
             <InputText class="form-control" @bind-Value="@user.Apellidos" id="Apellidos"></InputText>
         </div>
-        @if(isUpdate == false){
+        
             <div class="mb-2"> 
                 <label class="form-label" for="name"> Correo</label>
-                <InputText class="form-control" @bind-Value="@user.Correo" id="Correo"></InputText>
+                <input type="email" class="form-control" @bind-value="@user.Correo" id="Correo"></input>
             </div>
-        }
+        
          <div class="mb-2">
             <label class="form-label" for="name">Contraseña</label>
             <InputText type="password" class="form-control" @bind-Value="@user.Contraseña" id="Contraseña"></InputText>

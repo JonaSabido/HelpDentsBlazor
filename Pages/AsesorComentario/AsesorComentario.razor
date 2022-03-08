@@ -1,6 +1,6 @@
-﻿@page "/AsesorEspecialidad"
+﻿@page "/AsesorComentario"
 
-<PageTitle>Especialidad</PageTitle>
+<PageTitle>Comentarios de Asesores</PageTitle>
 
 @using HelpDentsProyecto.Data
 @using HelpDentsProyecto.Data.Models
@@ -10,10 +10,10 @@
 
 <div class="tittle">
     <div class="tittle_content">
-        <h1>Especialidades de Asesores</h1>
+        <h1>Comentarios de Asesores</h1>
     </div>
     <div class="tittle_btn">
-        <a href="/AsesorEspecialidad/add" class="btn btn-success">
+        <a href="/AsesorComentario/add" class="btn btn-success">
         <i class="oi oi-plus"></i>
         &nbsp
         Agregar
@@ -23,7 +23,7 @@
 
 <p>This component demonstrates fetching data from a service.</p>
 
-@if (AsesorEspecialidadFor == null)
+@if (AsesorComentarioFor == null)
 {
     <p><em>Loading...</em></p>
 }
@@ -38,28 +38,28 @@ else
             </tr>
         </thead>
         <tbody>
-            @foreach (var RecorridoAsesorEspecial in AsesorEspecialidadFor.Reverse())
+            @foreach (var RecorridoAsesorCom in AsesorComentarioFor.Reverse())
             {
                 <tr>
-                    <td>@RecorridoAsesorEspecial.Id</td>
+                    <td>@RecorridoAsesorCom.Id</td>
                     @foreach(var RecorridoAsesor in AsesorFor)
                     {
-                        if(@RecorridoAsesor.Id == @RecorridoAsesorEspecial.Asesor_idAsesor)
+                        if(@RecorridoAsesor.Id == @RecorridoAsesorCom.Asesor_idAsesor)
                         {
                             <td>(@RecorridoAsesor.Id) @RecorridoAsesor.Nombres @RecorridoAsesor.Apellidos</td>
                         }
                     }
-                    @foreach(var RecorridoEsp in EspecialidadFor)
+                    @foreach(var RecorridoCom in ComentarioFor)
                     {
-                        if(@RecorridoEsp.Id == @RecorridoAsesorEspecial.Especialidad_idEspecialidad)
+                        if(@RecorridoCom.Id == @RecorridoAsesorCom.Comentario_IdComentario)
                         {
-                            <td>(@RecorridoEsp.Id) @RecorridoEsp.Nombre</td>
+                            <td>(@RecorridoCom.Id) @RecorridoCom.Id</td>
                         }
                     }
 
                     <td>
                         <span class="icon">
-                            <a href="/AsesorEspecialidad/delete/@RecorridoAsesorEspecial.Id" class="oi oi-trash" title="Eliminar"></a>
+                            <a href="/AsesorComentario/delete/@RecorridoAsesorCom.Id" class="oi oi-trash" title="Eliminar"></a>
                         </span>
                     </td>
                 </tr>
@@ -69,17 +69,18 @@ else
 }
 
 @code {
-    private readonly string api = $"api/AsesorEspecialidad/all";
+    private readonly string api = $"api/AsesorComentario/all";
     private readonly string api2 = "api/Asesor/all";
-    private readonly string api3 = "api/Especialidad/all";
-    private IList<AsesorHasEspecialidadModel>? AsesorEspecialidadFor;
+    private readonly string api3 = "api/Comentario/all";
+    private IList<AsesorHasComentarioModel>? AsesorComentarioFor;
     private IList<AsesorModel>? AsesorFor;
-    private IList<EspecialidadModel>? EspecialidadFor;
+    private IList<ComentarioModel>? ComentarioFor;
 
     protected override async Task OnInitializedAsync()
     {
-        AsesorEspecialidadFor = await http.GetFromJsonAsync<IList<AsesorHasEspecialidadModel>>(api);
+        AsesorComentarioFor = await http.GetFromJsonAsync<IList<AsesorHasComentarioModel>>(api);
         AsesorFor = await http.GetFromJsonAsync<IList<AsesorModel>>(api2);
-        EspecialidadFor = await http.GetFromJsonAsync<IList<EspecialidadModel>>(api3);
+        ComentarioFor = await http.GetFromJsonAsync<IList<ComentarioModel>>(api3);
     }
 }
+

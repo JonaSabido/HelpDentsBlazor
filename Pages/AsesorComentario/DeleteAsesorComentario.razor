@@ -1,0 +1,41 @@
+﻿@page "/AsesorComentario/delete/{id:int}"
+
+<PageTitle>Borrar Comentario de Asesor</PageTitle>
+
+<h1> ¿Esta seguro que desea eliminar el comentario <b> @Comentario?.Id </b> perteneciente al asesor <b> @Asesor?.Nombres @Asesor?.Apellidos</b> </h1>
+<br />
+<button  class="btn btn-primary" @onclick = "ConfirmDelete">Confirmar</button>
+<a class="btn btn-danger" href="/AsesorEspecialidad">Cancelar</a>
+
+
+@using HelpDentsProyecto.Data.Models
+@using System.Net.Http
+@using System.Net.Http.Json
+@inject HttpClient http
+@inject NavigationManager NavigationManager
+
+@code{
+    [Parameter]
+
+    public int id {get; set;}
+
+    AsesorHasComentarioModel? AsesorComentario;
+    AsesorModel? Asesor;
+    ComentarioModel? Comentario;
+
+    protected override async Task OnInitializedAsync(){
+        AsesorComentario = await http.GetFromJsonAsync<AsesorHasComentarioModel>($"api/AsesorComentario/{id}");
+        Asesor = await http.GetFromJsonAsync<AsesorModel>($"api/asesor/{AsesorComentario?.Asesor_idAsesor}");
+        Comentario = await http.GetFromJsonAsync<ComentarioModel>($"api/especialidad/{AsesorComentario?.Comentario_IdComentario}");
+    
+    }
+    
+    private async Task ConfirmDelete(){
+        var response = await http.DeleteAsync($"api/AsesorComentario/{id}");
+        if(response.IsSuccessStatusCode){
+            NavigationManager.NavigateTo("/AsesorComentario");
+        }
+    }
+
+}
+

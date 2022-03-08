@@ -1,0 +1,41 @@
+﻿@page "/AsesorTurno/delete/{id:int}"
+
+<PageTitle>Borrar Especialidad de asesor</PageTitle>
+
+<h1> ¿Esta seguro que desea eliminar el turno <b> @Turno?.Nombre </b> al asesor <b> @Asesor?.Nombres @Asesor?.Apellidos ?</b> </h1>
+<br />
+<button  class="btn btn-primary" @onclick = "ConfirmDelete">Confirmar</button>
+<a class="btn btn-danger" href="/AsesorTurno">Cancelar</a>
+
+
+@using HelpDentsProyecto.Data.Models
+@using System.Net.Http
+@using System.Net.Http.Json
+@inject HttpClient http
+@inject NavigationManager NavigationManager
+
+@code{
+    [Parameter]
+
+    public int id {get; set;}
+
+    AsesorHasTurnoModel? AsesorTurno;
+    AsesorModel? Asesor;
+    TurnoModel? Turno;
+
+    protected override async Task OnInitializedAsync(){
+        AsesorTurno = await http.GetFromJsonAsync<AsesorHasTurnoModel>($"api/AsesorTurno/{id}");
+        Asesor = await http.GetFromJsonAsync<AsesorModel>($"api/asesor/{AsesorTurno?.Asesor_idAsesor}");
+        Turno = await http.GetFromJsonAsync<TurnoModel>($"api/turno/{AsesorTurno?.Turno_idTurno}");
+    
+    }
+    
+    private async Task ConfirmDelete(){
+        var response = await http.DeleteAsync($"api/AsesorTurno/{id}");
+        if(response.IsSuccessStatusCode){
+            NavigationManager.NavigateTo("/AsesorTurno");
+        }
+    }
+
+}
+

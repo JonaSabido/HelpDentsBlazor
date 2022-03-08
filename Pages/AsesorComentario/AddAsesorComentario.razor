@@ -1,0 +1,53 @@
+﻿@page "/AsesorComentario/add"
+
+@using System.Net.Http
+@using System.Net.Http.Json
+@using HelpDentsProyecto.Data.Models
+@using HelpDentsProyecto.Data
+@inject HttpClient http
+@inject NavigationManager NavigationManager
+
+
+<PageTitle>Agregar Comentarios a Asesor </PageTitle>
+<h1>Agregar Comentarios de Asesores</h1>
+
+
+
+<EditForm Model="@ahe"> 
+    <form class="container border" @onsubmit="Save">
+        <div class="mb-2">
+            <label class="form-label" for="name">Asesor Id</label>
+            <input type="number" class="form-control" @bind-value="@ahe.Asesor_idAsesor" id="idAsesor"></input>
+        </div>
+        <div class="mb-2">
+            <label class="form-label" for="name">Comentario Id</label>
+            <input type="number" class="form-control" @bind-value="@ahe.Comentario_IdComentario" id="idComentario"></input>
+        </div>
+        <button type="submit" class="btn btn-primary">Guardar</button>
+        <a class="btn btn-danger" href="/AsesorComentario">Cancelar</a>
+    </form> 
+</EditForm>
+
+
+
+
+@code {
+   
+    AsesorHasComentarioModel ahe = new AsesorHasComentarioModel();
+
+
+    protected async Task Save()
+    {
+        HttpResponseMessage? response;
+       
+        response = await http.PostAsJsonAsync<AsesorHasComentarioModel>("api/AsesorComentario", ahe!);
+        
+        NavigationManager.NavigateTo("/AsesorComentario");
+        
+
+    }
+
+
+
+}
+
