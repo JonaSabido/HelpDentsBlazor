@@ -41,14 +41,23 @@ else
             </tr>
         </thead>
         <tbody>
-            @foreach (var UsuarioRecorrido in UsuarioFor)
+            @foreach (var UsuarioRecorrido in UsuarioFor.Reverse())
             {
                 <tr>
                     <td>@UsuarioRecorrido.Id</td>
                     <td>@UsuarioRecorrido.Nombres</td>
                     <td>@UsuarioRecorrido.Apellidos</td>
                     <td>@UsuarioRecorrido.Correo</td>
-                    <td>@UsuarioRecorrido.Contraseña</td>
+                    <td>••••••••••</td>
+                    <td>
+                        <span class="icon">
+                            <a href="/Usuario/update/@UsuarioRecorrido.Id" class="oi oi-pencil" title="Editar"></a>
+                        </span>
+                        &nbsp
+                        <span class="icon">
+                            <a href="/Usuario/delete/@UsuarioRecorrido.Id" class="oi oi-trash" title="Eliminar"></a>
+                        </span>
+                    </td>
                 </tr>
             }
         </tbody>

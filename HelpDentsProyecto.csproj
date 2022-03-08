@@ -10,4 +10,9 @@
     <PackageReference Include="LibSassBuilder" Version="2.0.1" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Pages\AsesorTurno\" />
+    <Folder Include="Pages\AsesorComentario\" />
+  </ItemGroup>
+
 </Project>

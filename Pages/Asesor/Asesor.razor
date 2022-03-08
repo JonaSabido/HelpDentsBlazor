@@ -46,7 +46,7 @@ else
             </tr>
         </thead>
         <tbody>
-            @foreach (var RecorridoAsesor in AsesorFor)
+            @foreach (var RecorridoAsesor in AsesorFor.Reverse())
             {
                 <tr>
                     <td>@RecorridoAsesor.Id</td>

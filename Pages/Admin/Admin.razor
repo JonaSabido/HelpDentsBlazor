@@ -41,7 +41,7 @@ else
             </tr>
         </thead>
         <tbody>
-            @foreach (var RecorridoAdmin in AdminFor)
+            @foreach (var RecorridoAdmin in AdminFor.Reverse())
             {
                 <tr>
                     <td>@RecorridoAdmin.Id</td>

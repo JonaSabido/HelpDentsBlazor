@@ -1,0 +1,88 @@
+﻿@page "/Usuario/add"
+@page "/Usuario/update/{Id:int}"
+
+@using System.Net.Http
+@using System.Net.Http.Json
+@using HelpDentsProyecto.Data.Models
+@using HelpDentsProyecto.Data
+@inject HttpClient http
+@inject NavigationManager NavigationManager
+
+
+<PageTitle>@(isUpdate ? $"Editar Usuario[Id:{user.Id}]" : "Agregar Usuario") </PageTitle>
+<h1>@(isUpdate ? $"Editar Usuario[Id:{user.Id}]" : "Agregar Usuario")</h1>
+
+
+
+<EditForm Model="@user"> 
+    <form class="container border" @onsubmit="Save">
+        <div class="mb-2">
+            <label class="form-label" for="name">Nombres</label>
+            <InputText class="form-control" @bind-Value="@user.Nombres" id="Nombres"></InputText>
+        </div>
+         <div class="mb-2">
+            <label class="form-label" for="name">Apellidos</label>
+            <InputText class="form-control" @bind-Value="@user.Apellidos" id="Apellidos"></InputText>
+        </div>
+        @if(isUpdate == false){
+            <div class="mb-2"> 
+                <label class="form-label" for="name"> Correo</label>
+                <InputText class="form-control" @bind-Value="@user.Correo" id="Correo"></InputText>
+            </div>
+        }
+         <div class="mb-2">
+            <label class="form-label" for="name">Contraseña</label>
+            <InputText type="password" class="form-control" @bind-Value="@user.Contraseña" id="Contraseña"></InputText>
+        </div>
+        <button type="submit" class="btn btn-primary">Guardar</button>
+        <a class="btn btn-danger" href="/Usuario">Cancelar</a>
+    </form> 
+</EditForm>
+
+
+
+
+@code {
+    [Parameter]
+    public int id { get; set; }
+    public bool isUpdate { get; set; } = false;
+    bool loading = true;
+    UsuarioModel user = new UsuarioModel();
+
+    protected override async Task OnInitializedAsync()
+    {
+        isUpdate = id != 0;
+        if (isUpdate)
+        {
+            var response = await http.GetFromJsonAsync<UsuarioModel>($"api/usuario/{id}");
+            if (response != null)
+            {
+                user = response;
+            }
+
+        }
+        loading = false;
+    }
+
+    protected async Task Save()
+    {
+        HttpResponseMessage? response;
+        if (isUpdate)
+        {
+            response = await http.PutAsJsonAsync<UsuarioModel>($"api/usuario/{id}", user!);
+        }
+        else
+        {
+            response = await http.PostAsJsonAsync<UsuarioModel>("api/usuario", user!);
+        }
+        
+        NavigationManager.NavigateTo("/Usuario");
+        
+
+    }
+
+
+
+}
+
+

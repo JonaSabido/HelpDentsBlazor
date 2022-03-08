@@ -1,0 +1,34 @@
+﻿@page "/Comentario/delete/{id:int}"
+
+<PageTitle>Borrar Especialidad</PageTitle>
+
+<h1> ¿Esta seguro que desea eliminar el Comentario con Id <b> @esp?.Id ?</b> </h1>
+<br />
+<button  class="btn btn-primary" @onclick = "ConfirmDelete">Confirmar</button>
+<a class="btn btn-danger" href="/Comentario">Cancelar</a>
+
+
+@using HelpDentsProyecto.Data.Models
+@using System.Net.Http
+@using System.Net.Http.Json
+@inject HttpClient http
+@inject NavigationManager NavigationManager
+
+@code{
+    [Parameter]
+    
+    public int id {get; set;}
+
+    ComentarioModel? esp;
+
+    protected override async Task OnInitializedAsync(){
+        esp = await http.GetFromJsonAsync<ComentarioModel>($"api/Comentario/{id}");
+    }
+    private async Task ConfirmDelete(){
+        var response = await http.DeleteAsync($"api/Comentario/{id}");
+        if(response.IsSuccessStatusCode){
+            NavigationManager.NavigateTo("/Comentario");
+        }
+    }
+
+}

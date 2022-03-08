@@ -1,0 +1,85 @@
+﻿@page "/AsesorEspecialidad"
+
+<PageTitle>Especialidad</PageTitle>
+
+@using HelpDentsProyecto.Data
+@using HelpDentsProyecto.Data.Models
+@using System.Net.Http
+@using System.Net.Http.Json
+@inject HttpClient http
+
+<div class="tittle">
+    <div class="tittle_content">
+        <h1>Especialidades de Asesores</h1>
+    </div>
+    <div class="tittle_btn">
+        <a href="/AsesorEspecialidad/add" class="btn btn-success">
+        <i class="oi oi-plus"></i>
+        &nbsp
+        Agregar
+        </a>
+    </div>
+</div>
+
+<p>This component demonstrates fetching data from a service.</p>
+
+@if (AsesorEspecialidadFor == null)
+{
+    <p><em>Loading...</em></p>
+}
+else
+{
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Id</th>
+                <th>(Id) Asesor</th>
+                <th>Especialidad</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var RecorridoAsesorEspecial in AsesorEspecialidadFor.Reverse())
+            {
+                <tr>
+                    <td>@RecorridoAsesorEspecial.Id</td>
+                    @foreach(var RecorridoAsesor in AsesorFor)
+                    {
+                        if(@RecorridoAsesor.Id == @RecorridoAsesorEspecial.Asesor_idAsesor)
+                        {
+                            <td>(@RecorridoAsesor.Id) @RecorridoAsesor.Nombres @RecorridoAsesor.Apellidos</td>
+                        }
+                    }
+                    @foreach(var RecorridoEsp in EspecialidadFor)
+                    {
+                        if(@RecorridoEsp.Id == @RecorridoAsesorEspecial.Especialidad_idEspecialidad)
+                        {
+                            <td>@RecorridoEsp.Nombre</td>
+                        }
+                    }
+
+                    <td>
+                        <span class="icon">
+                            <a href="/AsesorEspecialidad/delete/@RecorridoAsesorEspecial.Id" class="oi oi-trash" title="Eliminar"></a>
+                        </span>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+
+@code {
+    private readonly string api = $"api/AsesorEspecialidad/all";
+    private readonly string api2 = "api/Asesor/all";
+    private readonly string api3 = "api/Especialidad/all";
+    private IList<AsesorHasEspecialidadModel>? AsesorEspecialidadFor;
+    private IList<AsesorModel>? AsesorFor;
+    private IList<EspecialidadModel>? EspecialidadFor;
+
+    protected override async Task OnInitializedAsync()
+    {
+        AsesorEspecialidadFor = await http.GetFromJsonAsync<IList<AsesorHasEspecialidadModel>>(api);
+        AsesorFor = await http.GetFromJsonAsync<IList<AsesorModel>>(api2);
+        EspecialidadFor = await http.GetFromJsonAsync<IList<EspecialidadModel>>(api3);
+    }
+}
