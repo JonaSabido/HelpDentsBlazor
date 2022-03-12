@@ -26,7 +26,7 @@
     protected override async Task OnInitializedAsync(){
         AsesorComentario = await http.GetFromJsonAsync<AsesorHasComentarioModel>($"api/AsesorComentario/{id}");
         Asesor = await http.GetFromJsonAsync<AsesorModel>($"api/asesor/{AsesorComentario?.Asesor_idAsesor}");
-        Comentario = await http.GetFromJsonAsync<ComentarioModel>($"api/especialidad/{AsesorComentario?.Comentario_IdComentario}");
+        Comentario = await http.GetFromJsonAsync<ComentarioModel>($"api/comentario/{AsesorComentario?.Comentario_IdComentario}");
     
     }
     

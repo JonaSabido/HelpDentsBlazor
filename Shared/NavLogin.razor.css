@@ -1,0 +1,12 @@
+﻿nav{
+    padding:2em;
+}
+
+i{
+    font-size: 2.5em;
+    color: white;
+}
+
+i:hover{
+    color: red;
+}

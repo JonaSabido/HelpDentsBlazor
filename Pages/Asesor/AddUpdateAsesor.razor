@@ -30,7 +30,7 @@
             </div>
          <div class="mb-2">
             <label class="form-label" for="name">Telefono</label>
-            <input type="text" class="form-control" @bind-value="@asesor.Telefono" id="Telefono"></input>
+            <input type="text" class="form-control" @bind-value="@asesor.Telefono" id="Telefono" required></input>
         </div>
         <div class="mb-2">
             <label class="form-label" for="name">Facebook</label>
@@ -46,11 +46,11 @@
         </div>
         <div class="mb-2">
             <label class="form-label" for="name">Youtube</label>
-            <InputText class="form-control" @bind-Value="@asesor.Youtube" id="Twitter"></InputText>
+            <InputText class="form-control" @bind-Value="@asesor.Youtube" id="Youtube"></InputText>
         </div>
         <div class="mb-2">
             <label class="form-label" for="name">Descripcion</label>
-            <InputText class="form-control" @bind-Value="@asesor.Descripcion" id="Telefono"></InputText>
+            <input type="text" class="form-control" @bind-value="@asesor.Descripcion" id="Descripcion" required></input>
         </div>
         <button type="submit" class="btn btn-primary">Guardar</button>
         <a class="btn btn-danger" href="/Asesor">Cancelar</a>

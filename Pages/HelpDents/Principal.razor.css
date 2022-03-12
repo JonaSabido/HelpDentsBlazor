@@ -1,0 +1,168 @@
+﻿
+.container {
+    
+    
+}
+#profile {
+   padding-top: 5%;
+   padding-left: 5%;
+   padding-right: 0%;
+    
+    
+}
+#menu-asesores {
+    padding-top: 5%;
+    padding-left: 15%;
+    padding-right: 0%;
+}
+#icon-user{
+    font-size: 3.5vw;
+    
+}
+
+#nameUser{
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 1.3vw;
+}
+#seeProfile {
+    color: #FF123A;
+    text-decoration: none;
+    font-size: 1vw;
+}
+#txt {
+    width: 100%;
+    margin-top: 15%;
+    padding-top: 10%;
+    border-top: 1px #DEDEDE solid;
+    font-size: .9vw;
+    color: #D0D0D0;
+    font-family: Arial;
+}
+#btn-form {
+    text-align: center;
+    width: 95%;
+    margin-left: 2.5%;
+    margin-top: 2%;
+    text-decoration: none;
+    font-family: inherit;
+    color: #FF123A;
+    border: 1px #FF123A solid;
+    border-radius: 5px;
+    padding: 2%;
+    background-color: white;
+    font-size: 1vw;
+}
+#btn-form:hover {
+    color: white;
+    background-color: #FF123A;
+}
+
+#titleComents {
+    margin-top: 10%;
+    font-size: 1.5vw;
+    color: #000585;
+    font-family: Arial;
+    padding-top: 15%;
+    border-top: 1px #DEDEDE solid;
+}
+.card{
+    width: 100%;
+    margin-top: 5%;
+    padding: 5%;
+}
+#icon-user-comment {
+    font-size: 2vw;
+    align-content: center;
+    display: flex;
+    justify-content: center;
+}
+.name-comentario{
+    font-size: 1vw;
+    font-family: Arial, Helvetica, sans-serif;
+    color: #FF123A;
+}
+.commentUser {
+    font-size: .8vw;
+    font-family: Arial;
+    color: #8A8A8A;
+    text-align: left;
+}
+#asesor-card {
+    margin-top: 5%;
+    width: 100%;
+    padding-top: 5%;
+    padding-bottom: 5%;
+    padding: 5%;
+    box-shadow: 2px 2px 3px 1px black;
+}
+    #asesor-card:hover {
+        width: 100%;
+        box-shadow: 2px 2px 5px 1px black;
+    }
+#icon-asesor{
+    font-size: 4.5vw;
+}
+#info-asesor{
+    padding-left: 5%;
+}
+#nameAsesor{
+    font-family: Arial;
+    font-size: 1.1vw;
+}
+#esp{
+    font-family: sans-serif;
+    font-size: 1vw;
+}
+#icon-phone {
+    font-size: 1vw;
+}
+#number{
+    font-family: sans-serif;
+    font-size: 1vw;
+    margin-left: 1px;
+}
+
+#seeAsesor {
+    text-align: center;
+    text-decoration: none;
+    font-family: inherit;
+    color: #000585;
+    border: 1px #000585 solid;
+    border-radius: 5px;
+    padding: 5% 20% 5% 20%;
+    font-size: .8vw;
+}
+
+    #seeAsesor:hover {
+        color: white;
+        background-color: #000585;
+    }
+
+#divBtn{
+    padding-top: 4%;
+}
+#title-asesores {
+    font-family: sans-serif;
+    font-size: 2vw;
+    color: #FF123A;
+}
+#seeAll {
+    background-color: #FF123A;
+    text-align: center;
+    text-decoration: none;
+    font-family: inherit;
+    color: white;
+    border: 1px white solid;
+    border-radius: 5px;
+    padding: 2%;
+    width: 100%;
+    font-size: 1vw;
+}
+
+    #seeAll:hover {
+        text-decoration: underline;
+    }
+#btn-all{
+    margin-top: 8%;
+    padding-bottom: 5%;
+}

@@ -1,0 +1,135 @@
+﻿@page "/Principal"
+@layout NavHelpDents
+
+@using HelpDentsProyecto.Data
+@using HelpDentsProyecto.Data.Models
+@using System.Net.Http
+@using System.Net.Http.Json
+@inject HttpClient http
+
+<div class="container">
+  <div class="row">
+    <div class="col-sm-4" id="profile">
+        <div class="row">
+            <div class="col-sm-4">
+                <span class="oi oi-person" id="icon-user" />
+            </div>
+            <div class="col-sm-8">
+                <h1 id="nameUser"> Nombre de usuario </h1>
+                <a href="#" id="seeProfile"> Mi perfil </a> 
+            </div>
+            <h3 id="txt">
+                Coviertete en un asesor para aparecer en la lista de personas disponibles a compartir
+                su conocimiento y ayudar a los demás. Tendrás que llenar algunos datos.
+            </h3>
+            <a href="#" id="btn-form">
+                Solicitar ser Asesor
+            </a>
+          
+        </div>
+        <h2 id="titleComents">
+            Comentarios a mi perfil
+        </h2>
+       <div class="card">
+           <div class="row">
+               <div class="col-sm-2">
+                   <span class="oi oi-person" id="icon-user-comment"/>                 
+               </div>
+               <div class="col-sm-10">
+                   <h3 class="name-comentario"> Nombre Usuario </h3> 
+                   <p class="commentUser"> Excelente maestro, me gusta su manera de enseñar, recomendado </p>
+               </div>
+
+           </div>
+       </div>
+
+    </div>
+    <div class="col-sm-8" id="menu-asesores">
+         <h1 id="title-asesores">
+             <b>Asesores Recientes</b>
+         </h1>
+         @{
+                int step = 1;
+         }
+         @if (AsesorFor == null)
+          {
+                <p><em>Loading...</em></p>
+          }
+          else
+          {
+                @foreach (var RecorridoAsesor in AsesorFor)
+                {
+                    if(step <= 3)
+                    {
+                            <div id="asesor-card"> 
+                            <div class="row">
+                                <div class="col-sm-2">
+
+                                    <span class="oi oi-person" id="icon-asesor" />
+                                </div>
+                                <div class="col-sm-7" id="info-asesor">
+                                    <h2 id="nameAsesor"> <b>@RecorridoAsesor.Nombres @RecorridoAsesor.Apellidos</b> </h2>
+
+
+                                    <h3 id="number">
+                                        <span class="oi oi-briefcase" id="icon-phone"></span>
+                                        @foreach(var RecorridoAsesorEspecialidad in AsesorEspecialidadFor)
+                                        {
+                                            if(RecorridoAsesorEspecialidad.Asesor_idAsesor == @RecorridoAsesor.Id)
+                                            {
+                                                @foreach(var RecorridoEspecialidad in EspecialidadFor)
+                                                {
+                                                
+                                                    if(RecorridoAsesorEspecialidad.Especialidad_idEspecialidad == RecorridoEspecialidad.Id)
+                                                    {
+                                                        @RecorridoEspecialidad.Nombre <text>. </text>
+                                                    }
+                                                
+                                                }
+
+                                            }
+                                        }
+                                    
+                                    </h3>
+
+
+                                    <h3 id="number">
+                                        <span class="oi oi-phone" id="icon-phone"></span>
+                                        @RecorridoAsesor.Telefono
+                                    </h3>
+
+                                </div>
+                                <div class="col-sm-3" id="divBtn">
+                                    <a href="#" id="seeAsesor"> Ver Perfil </a>
+                                </div>
+                            </div>
+                        </div>
+                    }
+
+                    step++;
+                }
+          }
+        <div id="btn-all">
+            <button id="seeAll"> Ver lista de asesores </button>
+        </div>
+
+      </div>
+      
+  </div>
+</div>
+@code {
+    private readonly string api = "api/Asesor/all";
+    private readonly string api2 = "api/Especialidad/all";
+    private readonly string api3 = "api/AsesorEspecialidad/all";
+    
+    private IList<AsesorHasEspecialidadModel>? AsesorEspecialidadFor;
+    private IList<AsesorModel>? AsesorFor;
+    private IList<EspecialidadModel>? EspecialidadFor;
+
+    protected override async Task OnInitializedAsync()
+    {
+        AsesorFor = await http.GetFromJsonAsync<IList<AsesorModel>>(api);
+        EspecialidadFor = await http.GetFromJsonAsync<IList<EspecialidadModel>>(api2);
+        AsesorEspecialidadFor = await http.GetFromJsonAsync<IList<AsesorHasEspecialidadModel>>(api3);
+    }
+}

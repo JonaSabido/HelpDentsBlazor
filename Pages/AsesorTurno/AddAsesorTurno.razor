@@ -17,11 +17,11 @@
     <form class="container border" @onsubmit="Save">
         <div class="mb-2">
             <label class="form-label" for="name">Asesor Id</label>
-            <input type="number" class="form-control" @bind-value="@aht.Asesor_idAsesor" id="idAsesor"></input>
+            <input type="number" class="form-control" @bind-value="@aht.Asesor_idAsesor" id="idAsesor" required></input>
         </div>
         <div class="mb-2">
             <label class="form-label" for="name">Turno Id</label>
-            <input type="number" class="form-control" @bind-value="@aht.Turno_idTurno" id="idTurno"></input>
+            <input type="number" class="form-control" @bind-value="@aht.Turno_idTurno" id="idTurno" required></input>
         </div>
         <button type="submit" class="btn btn-primary">Guardar</button>
         <a class="btn btn-danger" href="/AsesorTurno">Cancelar</a>

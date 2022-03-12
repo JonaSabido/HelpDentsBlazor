@@ -18,7 +18,7 @@
     <form class="container border" @onsubmit="Save">
         <div class="mb-2">
             <label class="form-label" for="name">Nombre</label>
-            <InputText class="form-control" @bind-Value="@esp.Nombre" id="Nombre"></InputText>
+            <input type="text" class="form-control" @bind-value="@esp.Nombre" id="Nombre" required></input>
         </div>
         <button type="submit" class="btn btn-primary">Guardar</button>
         <a class="btn btn-danger" href="/Especialidad">Cancelar</a>

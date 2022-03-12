@@ -1,0 +1,87 @@
+﻿@page "/"
+@layout NavHelpDents
+
+<form class="container">
+    
+    <div class="mb-2">
+        <label class="form-label" for="name">Fecha de Nacimiento</label>
+        <input type="date" class="form-control"  id="Fecha" required>
+    </div>
+    
+    <div class="mb-2">
+        <label class="form-label" for="name">Especialidades (3 Máximo)</label>
+        <br />
+        <input type="text" name="example" list="exampleList" placeholder="Especialidad 1">
+        <datalist id="exampleList">
+            <option value="A" />  
+            <option value="B" />
+        </datalist>
+
+        
+        <input type="text" name="example" list="exampleList" placeholder="Especialidad 2">
+        <datalist id="exampleList">
+            <option value="A" />  
+            <option value="B" />
+        </datalist>
+
+        
+        <input type="text" name="example" list="exampleList" placeholder="Especialidad 3">
+        <datalist id="exampleList">
+            <option value="A" />  
+            <option value="B" />
+        </datalist>
+    </div>
+    
+    <div class="mb-2">
+        <label class="form-label" for="name">Turnos (3 Máximo)</label>
+        <br />
+        <input type="text" name="example" list="exampleList" placeholder="Especialidad 1">
+        <datalist id="exampleList">
+            <option value="A" />  
+            <option value="B" />
+        </datalist>
+
+        
+        <input type="text" name="example" list="exampleList" placeholder="Especialidad 2">
+        <datalist id="exampleList">
+            <option value="A" />  
+            <option value="B" />
+        </datalist>
+
+        
+        <input type="text" name="example" list="exampleList" placeholder="Especialidad 3">
+        <datalist id="exampleList">
+            <option value="A" />  
+            <option value="B" />
+        </datalist>
+    </div> 
+
+    <div class="mb-2"> 
+        <label class="form-label" for="name"> Costo</label>
+        <input type="number" step="any" class="form-control" id="Costo" required/>
+    </div>
+    <div class="mb-2">
+        <label class="form-label" for="name">Telefono</label>
+        <input type="text" class="form-control" id="Telefono" required />
+    </div>
+
+    <div class="mb-2">
+        <label class="form-label" for="name"> Redes Sociales (URL) </label>
+        <input type="text" class="form-control" id="fb" placeholder="Facebook"/>
+        <input type="text" class="form-control" id="ig" placeholder="Instagram"/>
+        <input type="text" class="form-control" id="lk" placeholder="Linkendin"/>
+        <input type="text" class="form-control" id="yt" placeholder="Youtube"/>
+    </div>
+    <div class="mb-2">
+        <label class="form-label">Descripcion</label>
+        <input type="text" class="form-control" id="desc" required />
+    </div>
+    
+
+    <button type="submit" class="btn btn-primary">Guardar</button>
+    <a class="btn btn-danger" href="/Asesor">Cancelar</a>
+</form> 
+
+@code {
+
+}

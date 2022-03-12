@@ -1,0 +1,35 @@
+﻿#body {
+    background-image: none;
+    background-color: blue;
+}
+
+#banner{
+    width: 100%;
+}
+
+#presentation{
+    margin-top: 8%;
+    width: 80%;
+    margin-left: 10%;
+    display: inline-flex;
+}
+
+#qs{
+    width: 40%;
+    border-right: 3px gray solid;
+}
+
+#qs h1{
+    font-size: 4vw;
+    color: #000585;
+    font-family: 'Agency FB';
+}
+
+#presentation p{
+    width: 60%;
+    padding-left: 3em;
+    color: black;
+    font-size: 1.5vw;
+    text-align: justify;
+    font-family: Arial;
+}

@@ -1,0 +1,13 @@
+﻿.container{
+    padding: 5%;
+}
+input{
+    margin: 2%;
+    
+}
+    input:focus {
+        outline: none;
+        caret-color: red;
+        border: 1px red solid;
+        box-shadow: 1px 1px 1px 1px rgba(255,18,58, 0.2);
+    }    

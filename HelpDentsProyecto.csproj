@@ -7,7 +7,26 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <None Remove="Pages\HelpDents\FormularioAsesor.razor.css" />
+    <None Remove="Pages\HelpDents\Principal.razor.css" />
+    <None Remove="Pages\HelpDents\Registro.razor.css" />
+    <None Remove="Shared\NavLogin.razor.css" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Include="Pages\HelpDents\FormularioAsesor.razor.css" />
+    <Content Include="Pages\HelpDents\Principal.razor.css" />
+    <Content Include="Pages\HelpDents\Registro.razor.css" />
+    <Content Include="Shared\NavLogin.razor.css" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="LibSassBuilder" Version="2.0.1" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="wwwroot\css\Pages\index.css" />
+    <None Include="wwwroot\images\fondo.png" />
   </ItemGroup>
 
 </Project>

@@ -18,21 +18,21 @@
     <form class="container border" @onsubmit="Save">
         <div class="mb-2">
             <label class="form-label" for="name">Nombres</label>
-            <InputText class="form-control" @bind-Value="@user.Nombres" id="Nombres"></InputText>
+            <input type="text" class="form-control" @bind-value="@user.Nombres" id="Nombres" required></input>
         </div>
          <div class="mb-2">
             <label class="form-label" for="name">Apellidos</label>
-            <InputText class="form-control" @bind-Value="@user.Apellidos" id="Apellidos"></InputText>
+            <input type="text" class="form-control" @bind-value="@user.Apellidos" id="Apellidos" required></input>
         </div>
         
             <div class="mb-2"> 
                 <label class="form-label" for="name"> Correo</label>
-                <input type="email" class="form-control" @bind-value="@user.Correo" id="Correo"></input>
+                <input type="email" class="form-control" @bind-value="@user.Correo" id="Correo" required></input>
             </div>
         
          <div class="mb-2">
             <label class="form-label" for="name">Contraseña</label>
-            <InputText type="password" class="form-control" @bind-Value="@user.Contraseña" id="Contraseña"></InputText>
+            <input type="password" class="form-control" @bind-value="@user.Contraseña" id="Contraseña" required></input>
         </div>
         <button type="submit" class="btn btn-primary">Guardar</button>
         <a class="btn btn-danger" href="/Usuario">Cancelar</a>
