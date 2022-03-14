@@ -1,6 +1,9 @@
 using HelpDentsProyecto.Data;
+
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Web;
+using Microsoft.AspNetCore.Components.Authorization;
+using Microsoft.Extensions.DependencyInjection;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -8,6 +11,8 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddRazorPages();
 builder.Services.AddServerSideBlazor();
 builder.Services.AddSingleton<WeatherForecastService>();
+builder.Services.AddAuthorizationCore();
+//builder.Services.AddScoped<AuthenticationStateProvider, AuthStateProviderFalse>();
 
 var clientHandler = new HttpClientHandler();
 clientHandler.ServerCertificateCustomValidationCallback = 
