@@ -1,6 +1,7 @@
 ﻿@page "/Principal"
 @layout NavHelpDents
 
+<PageTitle> HelpDents </PageTitle>
 @using HelpDentsProyecto.Data
 @using HelpDentsProyecto.Data.Models
 @using System.Net.Http
@@ -9,20 +10,20 @@
 
 <div class="container">
   <div class="row">
-    <div class="col-sm-4" id="profile">
+    <div class="col-sm-4 position-fixed" id="profile">
         <div class="row">
             <div class="col-sm-4">
                 <span class="oi oi-person" id="icon-user" />
             </div>
             <div class="col-sm-8">
                 <h1 id="nameUser"> Nombre de usuario </h1>
-                <a href="#" id="seeProfile"> Mi perfil </a> 
+                <a href="/MiPerfil" id="seeProfile"> Mi perfil </a> 
             </div>
             <h3 id="txt">
                 Coviertete en un asesor para aparecer en la lista de personas disponibles a compartir
                 su conocimiento y ayudar a los demás. Tendrás que llenar algunos datos.
             </h3>
-            <a href="#" id="btn-form">
+            <a href="/FormAsesor" id="btn-form">
                 Solicitar ser Asesor
             </a>
           
@@ -30,6 +31,32 @@
         <h2 id="titleComents">
             Comentarios a mi perfil
         </h2>
+       <div class="card">
+           <div class="row">
+               <div class="col-sm-2">
+                   <span class="oi oi-person" id="icon-user-comment"/>                 
+               </div>
+               <div class="col-sm-10">
+                   <h3 class="name-comentario"> Nombre Usuario </h3> 
+                   <p class="commentUser"> Excelente maestro, me gusta su manera de enseñar, recomendado </p>
+               </div>
+
+           </div>
+       </div>
+
+       <div class="card">
+           <div class="row">
+               <div class="col-sm-2">
+                   <span class="oi oi-person" id="icon-user-comment"/>                 
+               </div>
+               <div class="col-sm-10">
+                   <h3 class="name-comentario"> Nombre Usuario </h3> 
+                   <p class="commentUser"> Excelente maestro, me gusta su manera de enseñar, recomendado </p>
+               </div>
+
+           </div>
+       </div>
+
        <div class="card">
            <div class="row">
                <div class="col-sm-2">
@@ -59,7 +86,7 @@
           {
                 @foreach (var RecorridoAsesor in AsesorFor)
                 {
-                    if(step <= 3)
+                    if(step <= 5)
                     {
                             <div id="asesor-card"> 
                             <div class="row">
@@ -94,13 +121,13 @@
 
 
                                     <h3 id="number">
-                                        <span class="oi oi-phone" id="icon-phone"></span>
-                                        @RecorridoAsesor.Telefono
+                                        <span class="oi oi-dollar" id="icon-phone"></span>
+                                        @RecorridoAsesor.Costo
                                     </h3>
 
                                 </div>
                                 <div class="col-sm-3" id="divBtn">
-                                    <a href="#" id="seeAsesor"> Ver Perfil </a>
+                                    <a href="/Asesor/@RecorridoAsesor.Id" id="seeAsesor"> Ver Perfil </a>
                                 </div>
                             </div>
                         </div>
@@ -110,7 +137,9 @@
                 }
           }
         <div id="btn-all">
-            <button id="seeAll"> Ver lista de asesores </button>
+            <a href="/Asesores/Search">
+                <button id="seeAll" acti> Ver lista de asesores </button>
+            </a>
         </div>
 
       </div>

@@ -4,16 +4,29 @@
     
 }
 #profile {
-   padding-top: 5%;
-   padding-left: 5%;
-   padding-right: 0%;
-    
+    padding-top: 3%;
+    padding-left: 5%;
+    padding-right: 5%;
+    display: block;
+    height: 90%;
+    overflow-y: scroll;
+    scroll-behavior: smooth;
+    margin-top: 5%;
+    background-color: white;
+    border-radius: 10px;
+    border: 1px #DEDEDE solid;
+
     
 }
 #menu-asesores {
-    padding-top: 5%;
+   
+    margin-left: 30%;
+    padding-top: 8%;
     padding-left: 15%;
     padding-right: 0%;
+}
+.card{
+    
 }
 #icon-user{
     font-size: 3.5vw;
@@ -88,19 +101,21 @@
     text-align: left;
 }
 #asesor-card {
+    background-color: white;
     margin-top: 5%;
     width: 100%;
     padding-top: 5%;
     padding-bottom: 5%;
     padding: 5%;
-    box-shadow: 2px 2px 3px 1px black;
+    box-shadow: 0px 0px 2px 0px black;
 }
     #asesor-card:hover {
         width: 100%;
-        box-shadow: 2px 2px 5px 1px black;
+        box-shadow: 0px 0px 4px 0px black;
     }
 #icon-asesor{
     font-size: 4.5vw;
+    position: inherit;
 }
 #info-asesor{
     padding-left: 5%;
@@ -108,6 +123,7 @@
 #nameAsesor{
     font-family: Arial;
     font-size: 1.1vw;
+    color: #FF123A;
 }
 #esp{
     font-family: sans-serif;
@@ -115,6 +131,7 @@
 }
 #icon-phone {
     font-size: 1vw;
+    position: inherit;
 }
 #number{
     font-family: sans-serif;
@@ -144,7 +161,7 @@
 #title-asesores {
     font-family: sans-serif;
     font-size: 2vw;
-    color: #FF123A;
+    color: black;
 }
 #seeAll {
     background-color: #FF123A;
@@ -166,3 +183,4 @@
     margin-top: 8%;
     padding-bottom: 5%;
 }
+

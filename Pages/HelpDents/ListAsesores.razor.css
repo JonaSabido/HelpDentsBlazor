@@ -1,0 +1,128 @@
+﻿.container {
+    padding-top: 7%;
+
+}
+#title {
+    color: #000585;
+    font-family: Arial;
+    font-size: 1.3vw;
+    border-bottom: 1px #DEDEDE solid;
+    width: 65%;
+    padding: 0 0 5px 0;
+    margin-bottom: 5px;
+
+}
+h4 {
+    font-size: 1vw;
+    color: #D3D3D3;
+    text-align: center;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-top: 35%;
+}
+#container-response-lista {
+    margin-top: 2%;
+    display: block;
+    height: 80%;
+    overflow-y: scroll;
+    scroll-behavior: smooth;
+    padding-bottom: 10%;
+    padding-right: 3%;
+    position: fixed;
+}
+#container-filters {
+    margin-left: 62%;
+    position: absolute;
+    margin-top: 3%;
+    padding: 1.5%;
+    background-color: white;
+    border-radius: 10px;
+    border: 1px #DEDEDE solid;
+}
+
+
+#asesor-card {
+    background-color: white;
+    margin-top: 5%;
+    width: 100%;
+    padding-top: 5%;
+    padding-bottom: 5%;
+    padding: 5%;
+    box-shadow: 0px 0px 2px 0px black;
+}
+
+    #asesor-card:hover {
+        width: 100%;
+        box-shadow: 0px 0px 4px 0px black;
+    }
+
+#icon-asesor {
+    font-size: 4.5vw;
+    position: inherit;
+    position: inherit;
+}
+
+#info-asesor {
+    padding-left: 5%;
+}
+
+#nameAsesor {
+    font-family: Arial;
+    font-size: 1.1vw;
+    color:#FF123A; 
+}
+
+#esp {
+    font-family: sans-serif;
+    font-size: 1vw;
+}
+
+#icon-phone {
+    font-size: 1vw;
+    position: inherit;
+}
+
+#number {
+    font-family: sans-serif;
+    font-size: 1vw;
+    margin-left: 1px;
+    color: black;
+}
+
+#seeAsesor {
+    text-align: center;
+    text-decoration: none;
+    font-family: inherit;
+    color: #000585;
+    border: 1px #000585 solid;
+    border-radius: 5px;
+    padding: 5% 20% 5% 20%;
+    font-size: .8vw;
+}
+
+    #seeAsesor:hover {
+        color: white;
+        background-color: #000585;
+    }
+#divBtn {
+    padding-top: 4%;
+
+}
+#title-filters {
+    font-size: 1vw;
+    color: #C8C8C8;
+}
+select:focus, input:focus {
+    outline: none;
+    border: 1px #000585 solid;
+    box-shadow: 0px 0px 3px 0px #000585;
+}
+button {
+    width: 100%;
+    margin-top: 5%;
+    color: white;
+    background-color: #00082D;
+    padding: 1%;
+}
+    

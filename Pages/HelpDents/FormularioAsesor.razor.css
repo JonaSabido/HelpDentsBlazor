@@ -1,13 +1,31 @@
-﻿.container{
+﻿h3 {
+    color: #000585;
+    font-family: Arial;
+    font-size: 1.3vw;
+}
+.container{
     padding: 5%;
 }
-input{
+input {
     margin: 2%;
-    
+    background-color: #DFDFDF;
 }
     input:focus {
         outline: none;
-        caret-color: red;
         border: 1px red solid;
-        box-shadow: 1px 1px 1px 1px rgba(255,18,58, 0.2);
-    }    
+        box-shadow: 2px 2px 5px 2px rgba(255,18,58, 0.1);
+        background-color: #DFDFDF;
+    }
+button{
+    margin-left: 2%;
+}
+button, a{
+    margin-top: 3%;
+}
+#sd {
+    background-color: white;
+    margin-top: 5%;
+    padding: 3%;
+    border-radius: 10px;
+    border: 1px #DEDEDE solid;
+}

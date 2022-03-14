@@ -32,16 +32,16 @@
 
 
 @code {
-   
-    AsesorHasEspecialidadModel ahe = new AsesorHasEspecialidadModel();
 
+    AsesorHasEspecialidadModel ahe = new AsesorHasEspecialidadModel();
 
     protected async Task Save()
     {
         HttpResponseMessage? response;
-       
+
+
         response = await http.PostAsJsonAsync<AsesorHasEspecialidadModel>("api/AsesorEspecialidad", ahe!);
-        
+
         NavigationManager.NavigateTo("/AsesorEspecialidad");
         
 

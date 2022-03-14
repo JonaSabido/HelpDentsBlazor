@@ -1,0 +1,249 @@
+﻿@page "/Asesor/{id:int}"
+@layout NavHelpDents
+
+@using System.Net.Http
+@using System.Net.Http.Json
+@using HelpDentsProyecto.Data.Models
+@using HelpDentsProyecto.Data
+@inject HttpClient http
+
+@if(@asesor == null)
+{
+    <h1> xd </h1>
+}
+else
+{
+    <div class="container">
+     <div id="head">
+         <span class="oi oi-person" id="icon-asesor"/>                 
+         <h1> @asesor.Nombres @asesor.Apellidos </h1> 
+         <div id="desc">
+             <p> @asesor.Descripcion
+            </p>
+        </div>
+     </div>
+     
+     <div id="info">
+        <div class="row">
+         <div class="col-sm-5 " id="details">
+             <h2 id="title"> Detalles </h2>
+             <div class="row" id="details-content">
+                 
+                 <div class="col-sm-6">
+                     
+                     <h2 id="n"> <span class="oi oi-dollar" id="icon-details"></span> @asesor.Costo </h2>
+                     <h2 id="n"> <span class="oi oi-briefcase" id="icon-details"></span> 
+                                @if(AsesorEspecialidadFor == null)
+                                {
+                                    
+                                }
+                                else
+                                {
+                                    @foreach(var RecorridoAsesorEspecialidad in AsesorEspecialidadFor)
+                                    {
+                                        if(RecorridoAsesorEspecialidad.Asesor_idAsesor == @asesor.Id)
+                                        {
+                                            if(EspecialidadFor == null)
+                                            {
+                                                
+                                            }
+                                            else
+                                            {
+                                                @foreach(var RecorridoEspecialidad in EspecialidadFor)
+                                                {
+                                                
+                                                    if(RecorridoAsesorEspecialidad.Especialidad_idEspecialidad == RecorridoEspecialidad.Id)
+                                                    {
+                                                        @RecorridoEspecialidad.Nombre <text>. </text>
+                                                    }
+                                                
+                                                } 
+                                            }
+                                                  
+
+                                        }
+                                    }
+                                }
+                                
+                     </h2>
+                     <h2 id="n"> <span class="oi oi-calendar" id="icon-details"></span> 
+                            @if(AsesorTurnoFor == null)
+                                {
+                                    
+                                }
+                                else
+                                {
+                                    @foreach(var RecorridoAsesorTurno  in AsesorTurnoFor)
+                                    {
+                                        if(RecorridoAsesorTurno.Asesor_idAsesor == @asesor.Id)
+                                        {
+                                            if(TurnoFor == null)
+                                            {
+                                                
+                                            }
+                                            else
+                                            {
+                                                @foreach(var RecorrridoTurno in TurnoFor)
+                                                {
+                                                
+                                                    if(RecorridoAsesorTurno.Turno_idTurno == RecorrridoTurno.Id)
+                                                    {
+                                                        @RecorrridoTurno.Nombre <text>. </text>
+                                                    }
+                                                
+                                                } 
+                                            }
+                                                  
+
+                                        }
+                                    }
+                                }
+                     </h2>
+                     <h2 id="n"> <span class="oi oi-phone" id="icon-details"></span> @asesor.Telefono </h2>
+
+                    
+
+                 </div>
+                 <div class="col-sm-6">
+
+                            @if(asesor.Facebook != null)
+                            {
+                                <a href="@asesor.Facebook" class="btnSocial"> <span class="oi oi-location" id="icon-details" target="_blank"></span> Facebook </a>
+                                <br />
+                            }
+                            @if(asesor.Instagram != null)
+                            {
+                                <a href="@asesor.Instagram" class="btnSocial"> <span class="oi oi-location" id="icon-details" target="_blank"></span> Instagram </a>
+                                <br />
+                            }
+                            @if(asesor.Linkendin != null)
+                            {
+                                <a href="@asesor.Linkendin" class="btnSocial"> <span class="oi oi-location" id="icon-details" target="_blank"></span> Linkendin </a>
+                                <br />
+                            }
+                            @if(asesor.Youtube != null)
+                            {
+                                <a href="@asesor.Youtube" class="btnSocial"> <span class="oi oi-location" id="icon-details" target="_blank"></span> YouTube </a>
+                            }
+
+
+                    
+                    
+                    
+                    
+                 </div>
+             </div>
+         </div>
+         <div id="seccion-comentarios">
+                <h2 id="title"> Comentarios </h2>
+                
+                
+
+                        @if(AsesorComentarioFor == null)
+                        {
+                            
+                        }
+                        else
+                        {   
+                            @if(AsesorComentarioFor.Count() == 0)
+                            {
+                                <h2 id="alert"> Aún no hay comentarios </h2>
+                            }
+                            else
+                            {
+                                <div id="comments" >
+                                @foreach(var RecorridoAsesorComentario in AsesorComentarioFor)
+                                {
+                                    @if(ComentarioFor == null)
+                                    {
+                                    
+                                    }
+                                    else
+                                    {
+                                        @foreach(var RecorridoComentario in ComentarioFor)
+                                        {
+                                            @if(RecorridoAsesorComentario.Comentario_IdComentario == RecorridoComentario.Id)
+                                            {
+                                                <div class="card-comment">
+                                                    <div class="row">
+                                                        <div class="col-sm-2">
+                                                            <span class="oi oi-person" id="icon-user-comment"/>                 
+                                                        </div>
+                                                        <div class="col-sm-10">
+                                                            <h3 class="name-comentario"> @RecorridoComentario.Nombres @RecorridoComentario.Apellidos </h3> 
+                                                            <p class="commentUser"> @RecorridoComentario.Descripcion </p>
+                                                        </div>
+                                                    </div>
+                                                </div>                     
+                                            }
+                                        }
+                                    }
+                                }
+                                </div>
+                             } 
+                        }
+                        
+                   
+                
+
+                <div id="commentUser">
+                    <input type="text" placeholder="Deja un comentario" id="comentario"/>
+                    <a href="#" id="btn-coment"> <span class="oi oi-caret-right" id="icon-coment"></span></a>
+                </div>
+
+
+            </div>
+        </div>
+     </div>
+
+
+     
+
+
+</div>
+}
+
+@code {
+    [Parameter]
+    public int id { get; set; }
+
+
+    private readonly string api2 = "api/Especialidad/all";
+    private readonly string api3 = "api/Turno/all";
+    private readonly string api4 = "api/AsesorEspecialidad/all";
+    private readonly string api5 = "api/AsesorTurno/all";
+    private readonly string api6 = "api/Usuario/all";
+    private readonly string api7 = "api/Comentario/all";
+
+    AsesorModel? asesor = new AsesorModel();
+    private IList<AsesorHasEspecialidadModel>? AsesorEspecialidadFor;
+    private IList<AsesorHasTurnoModel>? AsesorTurnoFor;
+    private IList<EspecialidadModel>? EspecialidadFor;
+    private IList<TurnoModel>? TurnoFor;
+    private IList<AsesorHasComentarioModel>? AsesorComentarioFor;
+    private IList<ComentarioModel>? ComentarioFor;
+    private IList<UsuarioModel>? UsuarioFor;
+
+    protected override async Task OnInitializedAsync()
+    {
+        AsesorEspecialidadFor = await http.GetFromJsonAsync<IList<AsesorHasEspecialidadModel>>(api4);
+        AsesorTurnoFor = await http.GetFromJsonAsync<IList<AsesorHasTurnoModel>>(api5);
+        EspecialidadFor = await http.GetFromJsonAsync<IList<EspecialidadModel>>(api2);
+        TurnoFor = await http.GetFromJsonAsync<IList<TurnoModel>>(api3);
+        UsuarioFor = await http.GetFromJsonAsync<IList<UsuarioModel>>(api6);
+        ComentarioFor = await http.GetFromJsonAsync<List<ComentarioModel>>(api7);
+
+        var response = await http.GetFromJsonAsync<AsesorModel>($"api/Asesor/{id}");
+        if (response != null)
+        {
+            asesor = response;
+        }
+        var response2 = await http.GetFromJsonAsync<IList<AsesorHasComentarioModel>>($"api/AsesorComentario/asesor/{id}");
+        if(response2 != null)
+        {
+            AsesorComentarioFor = response2;
+        }
+        
+
+    }
+}

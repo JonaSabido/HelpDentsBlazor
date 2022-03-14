@@ -1,6 +1,17 @@
-﻿@page "/"
+﻿@page "/FormAsesor"
 @layout NavHelpDents
 
+<PageTitle>Formulario Asesor </PageTitle>
+
+@using HelpDentsProyecto.Data
+@using HelpDentsProyecto.Data.Models
+@using System.Net.Http
+@using System.Net.Http.Json
+@inject HttpClient http
+
+<div class="container">
+    <div id="sd">
+        <h3> <b>Solicitud registro de asesor</b> </h3>
 <form class="container">
     
     <div class="mb-2">
@@ -9,56 +20,59 @@
     </div>
     
     <div class="mb-2">
-        <label class="form-label" for="name">Especialidades (3 Máximo)</label>
+        <label class="form-label" for="name">Especialidades (1 Mínimo)</label>
         <br />
-        <input type="text" name="example" list="exampleList" placeholder="Especialidad 1">
-        <datalist id="exampleList">
-            <option value="A" />  
-            <option value="B" />
+        <input type="text" class="form-control" name="example" list="listEsp" placeholder="Especialidad 1">
+        <datalist id="listEsp">
+            @if(EspecialidadFor == null)
+             {
+                    <option> </option>
+                }
+                else
+                {
+                    foreach(var RecorridoEspecial in EspecialidadFor)
+                    {
+                        <option> @RecorridoEspecial.Nombre </option>
+                    }      
+             }
         </datalist>
 
         
-        <input type="text" name="example" list="exampleList" placeholder="Especialidad 2">
-        <datalist id="exampleList">
-            <option value="A" />  
-            <option value="B" />
-        </datalist>
+        <input type="text" class="form-control" name="example" list="listEsp" placeholder="Especialidad 2 ">
 
         
-        <input type="text" name="example" list="exampleList" placeholder="Especialidad 3">
-        <datalist id="exampleList">
-            <option value="A" />  
-            <option value="B" />
-        </datalist>
+        <input type="text" class="form-control" name="example" list="listEsp" placeholder="Especialidad 3">
+
     </div>
     
     <div class="mb-2">
-        <label class="form-label" for="name">Turnos (3 Máximo)</label>
+        <label class="form-label" for="name">Turnos (1 Mínimo)</label>
         <br />
-        <input type="text" name="example" list="exampleList" placeholder="Especialidad 1">
-        <datalist id="exampleList">
-            <option value="A" />  
-            <option value="B" />
+        <input type="text" class="form-control" name="example" list="listTurno" placeholder="Turno 1">
+        <datalist id="listTurno">
+            @if(TurnoFor == null)
+             {
+                    <option> </option>
+                }
+                else
+                {
+                    foreach(var RecorridoTurno in TurnoFor)
+                    {
+                        <option> @RecorridoTurno.Nombre </option>
+                    }      
+             }
         </datalist>
 
         
-        <input type="text" name="example" list="exampleList" placeholder="Especialidad 2">
-        <datalist id="exampleList">
-            <option value="A" />  
-            <option value="B" />
-        </datalist>
+        <input type="text" class="form-control" name="example" list="listTurno" placeholder="Turno 2">
 
         
-        <input type="text" name="example" list="exampleList" placeholder="Especialidad 3">
-        <datalist id="exampleList">
-            <option value="A" />  
-            <option value="B" />
-        </datalist>
+        <input type="text" class="form-control" name="example" list="listTurno" placeholder="Turno 3">
     </div> 
 
     <div class="mb-2"> 
         <label class="form-label" for="name"> Costo</label>
-        <input type="number" step="any" class="form-control" id="Costo" required/>
+        <input type="number" step="any" class="form-control" id="Costo" placeholder="$" required/>
     </div>
     <div class="mb-2">
         <label class="form-label" for="name">Telefono</label>
@@ -78,10 +92,21 @@
     </div>
     
 
-    <button type="submit" class="btn btn-primary">Guardar</button>
-    <a class="btn btn-danger" href="/Asesor">Cancelar</a>
-</form> 
+    <button type="submit" class="btn btn-primary">Enviar </button>
+    <a class="btn btn-danger" href="/Principal">Cancelar</a>
+</form>
+    </div> 
+</div>
 
 @code {
+    private readonly string api = "api/Especialidad/all";
+    private readonly string api2 = "api/Turno/all";
+    private IList<EspecialidadModel>? EspecialidadFor;
+    private IList<TurnoModel>? TurnoFor;
 
+    protected override async Task OnInitializedAsync()
+    {
+        EspecialidadFor = await http.GetFromJsonAsync<IList<EspecialidadModel>>(api);
+        TurnoFor = await http.GetFromJsonAsync<IList<TurnoModel>>(api2);
+    }
 }
