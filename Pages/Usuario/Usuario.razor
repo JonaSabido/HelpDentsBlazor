@@ -37,18 +37,29 @@ else
                 <th>Nombres</th>
                 <th>Apellidos</th>
                 <th>Correo</th>
-                <th>Contraseña</th>
+                <th>Rol</th>
             </tr>
         </thead>
         <tbody>
-            @foreach (var UsuarioRecorrido in UsuarioFor.Reverse())
+            @foreach (var UsuarioRecorrido in UsuarioFor)
             {
                 <tr>
                     <td>@UsuarioRecorrido.Id</td>
                     <td>@UsuarioRecorrido.Nombres</td>
                     <td>@UsuarioRecorrido.Apellidos</td>
                     <td>@UsuarioRecorrido.Correo</td>
-                    <td>••••••••••</td>
+                    @if(UsuarioRecorrido.RolIdRol == 1)
+                    {
+                        <td> Administrador </td>
+                    }
+                    @if(UsuarioRecorrido.RolIdRol == 2)
+                    {
+                        <td> Asesor </td>
+                    }
+                    @if(UsuarioRecorrido.RolIdRol == 3)
+                    {
+                        <td> Usuario </td>
+                    }
                     <td>
                         <span class="icon">
                             <a href="/Usuario/update/@UsuarioRecorrido.Id" class="oi oi-pencil" title="Editar"></a>

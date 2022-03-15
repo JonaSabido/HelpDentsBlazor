@@ -34,6 +34,14 @@
             <label class="form-label" for="name">Contraseña</label>
             <input type="password" class="form-control" @bind-value="@user.Contraseña" id="Contraseña" required></input>
         </div>
+        <div class="mb-2">
+            <label class="form-label" for="name">Rol</label>
+            <select class="form-control" @bind="@user.RolIdRol" id="Rol" required>
+                <option value=1> Administrador </option>
+                <option value=2> Asesor </option>
+                <option value=3> Usuario </option>
+            </select>
+        </div>
         <button type="submit" class="btn btn-primary">Guardar</button>
         <a class="btn btn-danger" href="/Usuario">Cancelar</a>
     </form> 
