@@ -7,9 +7,17 @@
 @using HelpDentsProyecto.Data
 @inject HttpClient http
 @inject NavigationManager NavigationManager
+@using Microsoft.AspNetCore.Components.Server.ProtectedBrowserStorage
+@inject ProtectedSessionStorage SessionStorage
 
 
-<PageTitle>@(isUpdate ? $"Editar Usuario[Id:{user.Id}]" : "Agregar Usuario") </PageTitle>
+@if(sesion == false)
+{
+
+}
+else
+{    
+    <PageTitle>@(isUpdate ? $"Editar Usuario[Id:{user.Id}]" : "Agregar Usuario") </PageTitle>
 <h1>@(isUpdate ? $"Editar Usuario[Id:{user.Id}]" : "Agregar Usuario")</h1>
 
 
@@ -46,6 +54,10 @@
         <a class="btn btn-danger" href="/Usuario">Cancelar</a>
     </form> 
 </EditForm>
+}
+
+
+
 
 
 
@@ -56,21 +68,65 @@
     public bool isUpdate { get; set; } = false;
     bool loading = true;
     UsuarioModel user = new UsuarioModel();
+    private ResponseLogin? userLog;
+    private bool sesion = false;
 
-    protected override async Task OnInitializedAsync()
+    protected override async Task OnAfterRenderAsync(bool firstRender)
     {
-        isUpdate = id != 0;
-        if (isUpdate)
+        if (firstRender)
         {
-            var response = await http.GetFromJsonAsync<UsuarioModel>($"api/usuario/{id}");
-            if (response != null)
+            try
             {
-                user = response;
-            }
 
+                var result = await SessionStorage.GetAsync<string>("Token");
+                string Token = result.Success ? result.Value : "";
+
+                if(Token == "")
+                {
+                    NavigationManager.NavigateTo("/Login");
+                }
+
+                var request = new HttpRequestMessage(HttpMethod.Get, $"api/Login/ValidateToken/{Token}");
+                using var httpResponseInitial = await http.SendAsync(request);
+                userLog = await httpResponseInitial.Content.ReadFromJsonAsync<ResponseLogin>();
+
+
+                    if(userLog == null)
+                    {
+                        NavigationManager.NavigateTo("/Login");
+                    }
+                    else if(userLog.RolIdRol != 1)
+                    {
+                        NavigationManager.NavigateTo("/");
+                    }
+                    else
+                    {
+                        sesion = true;
+                        isUpdate = id != 0;
+                        if (isUpdate)
+                        {
+                            var response = await http.GetFromJsonAsync<UsuarioModel>($"api/usuario/{id}");
+                            if (response != null)
+                            {
+                                user = response;
+                            }
+
+                        }
+                        loading = false;
+                    }
+                
+
+                StateHasChanged();
+                
+            }
+            catch(Exception ex)
+            {
+               
+            }
         }
-        loading = false;
+        
     }
+
 
     protected async Task Save()
     {

@@ -2,7 +2,7 @@
 @page "/Asesores/search/{name}"
 @layout NavHelpDents
 
-<PageTitle> Asesores </PageTitle>
+
 @using HelpDentsProyecto.Data
 @using HelpDentsProyecto.Data.Models
 @using System.Net.Http
@@ -10,134 +10,149 @@
 @using System.Text.Json.Serialization
 @using System.Net.Http.Json
 @inject HttpClient http
+@using Microsoft.AspNetCore.Components.Server.ProtectedBrowserStorage
+@inject ProtectedSessionStorage SessionStorage
+@inject NavigationManager NavigationManager
 
-<div class="container">
-    <div class="row">
-        <h3 id="title"> <b>Resultados de la busqueda</b> </h3>
-        <div class="col-sm-7" id="container-response-lista">
-          @if (AsesorFor == null )
-          {
-                <p><em>Loading...</em></p>
-          }
-          else
-          {
-              @if(AsesorFor.Count() == 0){
-                    <h4> No hay resultados </h4>
-                }
-                else
-                {
-                    @foreach (var RecorridoAsesor in AsesorFor)
+
+@if(sesion == false)
+{
+
+}
+else
+{    
+    <PageTitle> Asesores </PageTitle>
+    <div class="container">
+        <div class="row">
+            <h3 id="title"> <b>Resultados de la busqueda</b> </h3>
+            <div class="col-sm-7" id="container-response-lista">
+              @if (AsesorFor == null )
+              {
+                    <p><em>Loading...</em></p>
+              }
+              else
+              {
+                  @if(AsesorFor.Count() == 0){
+                        <h4> No hay resultados </h4>
+                    }
+                    else
                     {
-                            <div id="asesor-card"> 
-                            <div class="row">
-                                <div class="col-sm-2">
+                        @foreach (var RecorridoAsesor in AsesorFor)
+                        {
+                                <div id="asesor-card"> 
+                                <div class="row">
+                                    <div class="col-sm-2">
 
-                                    <span class="oi oi-person" id="icon-asesor" />
-                                </div>
-                                <div class="col-sm-7" id="info-asesor">
-                                    <h2 id="nameAsesor"> <b>@RecorridoAsesor.Nombres @RecorridoAsesor.Apellidos</b> </h2>
+                                        <span class="oi oi-person" id="icon-asesor" />
+                                    </div>
+                                    <div class="col-sm-7" id="info-asesor">
+                                        <h2 id="nameAsesor"> <b>@RecorridoAsesor.Nombres @RecorridoAsesor.Apellidos</b> </h2>
 
 
-                                    <h3 id="number">
-                                        <span class="oi oi-briefcase" id="icon-phone"></span>
-                                        @foreach(var RecorridoAsesorEspecialidad in AsesorEspecialidadFor)
-                                        {
-                                            if(RecorridoAsesorEspecialidad.Asesor_idAsesor == @RecorridoAsesor.Id)
+                                        <h3 id="number">
+                                            <span class="oi oi-briefcase" id="icon-phone"></span>
+                                            @foreach(var RecorridoAsesorEspecialidad in AsesorEspecialidadFor)
                                             {
-                                                @foreach(var RecorridoEspecialidad in EspecialidadFor)
+                                                if(RecorridoAsesorEspecialidad.Asesor_idAsesor == @RecorridoAsesor.Id)
                                                 {
-                                                
-                                                    if(RecorridoAsesorEspecialidad.Especialidad_idEspecialidad == RecorridoEspecialidad.Id)
+                                                    @foreach(var RecorridoEspecialidad in EspecialidadFor)
                                                     {
-                                                        @RecorridoEspecialidad.Nombre <text>. </text>
-                                                    }
                                                 
+                                                        if(RecorridoAsesorEspecialidad.Especialidad_idEspecialidad == RecorridoEspecialidad.Id)
+                                                        {
+                                                            @RecorridoEspecialidad.Nombre <text>. </text>
+                                                        }
+                                                
+                                                    }
+
                                                 }
-
                                             }
-                                        }
                                     
-                                    </h3>
+                                        </h3>
 
 
-                                    <h3 id="number">
-                                        <span class="oi oi-dollar"></span>
-                                        @RecorridoAsesor.Costo
-                                    </h3>
+                                        <h3 id="number">
+                                            <span class="oi oi-dollar"></span>
+                                            @RecorridoAsesor.Costo
+                                        </h3>
 
-                                </div>
-                                <div class="col-sm-3" id="divBtn">
-                                    <a href="/Asesor/@RecorridoAsesor.Id" id="seeAsesor"> Ver Perfil </a>
+                                    </div>
+                                    <div class="col-sm-3" id="divBtn">
+                                        <a href="/Asesor/@RecorridoAsesor.Id" id="seeAsesor"> Ver Perfil </a>
+                                    </div>
                                 </div>
                             </div>
-                        </div>
                     
+                        }
                     }
-                }
                 
                 
-         }
+             }
             
             
 
 
-        </div>
-        <div class="col-sm-3" id="container-filters">
-            <h3 id="title-filters">
-                <span class="oi oi-copywriting"></span>
-                FILTROS
-            </h3>
-            <EditForm Model="@fr">
-                <form class="container" @onsubmit="Filtrar">
-                <div class="mb-2">
-                     <label class="form-label"> Especialidad </label>
-                    <select class="form-control" @bind = "@fr.idEspecialidad" >
-                        <option value=0 selected> Cualquiera </option>
-                        @if(EspecialidadFor == null)
-                        {
-                            
-                        }
-                        else
-                        {
-                            @foreach(var RecorridoEspecialidad in EspecialidadFor)
+            </div>
+            <div class="col-sm-3" id="container-filters">
+                <h3 id="title-filters">
+                    <span class="oi oi-copywriting"></span>
+                    FILTROS
+                </h3>
+                <EditForm Model="@fr">
+                    <form class="container" @onsubmit="Filtrar">
+                    <div class="mb-2">
+                         <label class="form-label"> Especialidad </label>
+                        <select class="form-control" @bind = "@fr.idEspecialidad" >
+                            <option value=0 selected> Cualquiera </option>
+                            @if(EspecialidadFor == null)
                             {
-                                <option value=@RecorridoEspecialidad.Id > @RecorridoEspecialidad.Nombre </option>
-                            }
-                        }
-                    </select>
-                </div>
-                <div class="mb-2">
-                    <label class="form-label"> Turno </label>
-                    <select class="form-control" @bind = "@fr.idTurno" autofocus>
-                        <option value=0 selected> Cualquiera </option>
-                        @if(TurnoFor == null)
-                        {
                             
-                        }
-                        else
-                        {
-                            @foreach(var RecorridoTurno in TurnoFor)
-                            {
-                                <option value=@RecorridoTurno.Id> @RecorridoTurno.Nombre </option>
                             }
-                        }
-                    </select>
-                </div>
-                <div class="mb-2">
-                    <label class="form-label"> Costo máximo </label>
-                    <input type="number" step="any" class="form-control" id="Costo" placeholder="$" @bind-value="@fr.Costo"/>
-                </div>
+                            else
+                            {
+                                @foreach(var RecorridoEspecialidad in EspecialidadFor)
+                                {
+                                    <option value=@RecorridoEspecialidad.Id > @RecorridoEspecialidad.Nombre </option>
+                                }
+                            }
+                        </select>
+                    </div>
+                    <div class="mb-2">
+                        <label class="form-label"> Turno </label>
+                        <select class="form-control" @bind = "@fr.idTurno" autofocus>
+                            <option value=0 selected> Cualquiera </option>
+                            @if(TurnoFor == null)
+                            {
+                            
+                            }
+                            else
+                            {
+                                @foreach(var RecorridoTurno in TurnoFor)
+                                {
+                                    <option value=@RecorridoTurno.Id> @RecorridoTurno.Nombre </option>
+                                }
+                            }
+                        </select>
+                    </div>
+                    <div class="mb-2">
+                        <label class="form-label"> Costo máximo </label>
+                        <input type="number" step="any" class="form-control" id="Costo" placeholder="$" @bind-value="@fr.Costo"/>
+                    </div>
                 
-                <div class="mb-2">
-                    <button type="submit" id="btn-filter">Filtrar </button>
-                </div>
+                    <div class="mb-2">
+                        <button type="submit" id="btn-filter">Filtrar </button>
+                    </div>
                 
-            </form>
-            </EditForm>
+                </form>
+                </EditForm>
             
+            </div>
         </div>
     </div>
-</div>
+}
+
+
+
 
 @code {
     [Parameter]
@@ -156,31 +171,75 @@
     private IList<AsesorModel>? AsesorForName;
     private IList<EspecialidadModel>? EspecialidadFor;
     private IList<TurnoModel>? TurnoFor;
+    private ResponseLogin? user;
+    private bool sesion = false;
 
     FilterRequest fr = new FilterRequest();
-
-    protected override async Task OnInitializedAsync()
+    protected override async Task OnAfterRenderAsync(bool firstRender)
     {
-        AsesorFor = await http.GetFromJsonAsync<IList<AsesorModel>>(api);
-        EspecialidadFor = await http.GetFromJsonAsync<IList<EspecialidadModel>>(api2);
-        AsesorEspecialidadFor = await http.GetFromJsonAsync<IList<AsesorHasEspecialidadModel>>(api3);
-        TurnoFor = await http.GetFromJsonAsync<IList<TurnoModel>>(api4);
-
-        isUpdate = name != null;
-        if (isUpdate)
+        if (firstRender)
         {
-            var response = await http.GetFromJsonAsync<List<AsesorModel>>($"api/Asesor/search/{name}");
-            if(response != null)
+            try
             {
-                AsesorFor = response;
+
+                var result = await SessionStorage.GetAsync<string>("Token");
+                string Token = result.Success ? result.Value : "";
+
+                if(Token == "")
+                {
+                    NavigationManager.NavigateTo("/Login");
+                }
+
+                var request = new HttpRequestMessage(HttpMethod.Get, $"api/Login/ValidateToken/{Token}");
+                using var httpResponseInitial = await http.SendAsync(request);
+                user = await httpResponseInitial.Content.ReadFromJsonAsync<ResponseLogin>();
+
+
+                if(user == null)
+                {
+                    NavigationManager.NavigateTo("/Login");
+                }
+                else if(user.RolIdRol == 1)
+                {
+                    NavigationManager.NavigateTo("/");
+                }
+                else
+                {
+                    sesion = true;
+                    AsesorFor = await http.GetFromJsonAsync<IList<AsesorModel>>(api);
+                    EspecialidadFor = await http.GetFromJsonAsync<IList<EspecialidadModel>>(api2);
+                    AsesorEspecialidadFor = await http.GetFromJsonAsync<IList<AsesorHasEspecialidadModel>>(api3);
+                    TurnoFor = await http.GetFromJsonAsync<IList<TurnoModel>>(api4);
+
+                    isUpdate = name != null;
+                    if (isUpdate)
+                    {
+                        var response = await http.GetFromJsonAsync<List<AsesorModel>>($"api/Asesor/search/{name}");
+                        if(response != null)
+                        {
+                            AsesorFor = response;
+                            StateHasChanged();
+                
+                        }
+            
+                    }
+                    
+                        
+                }
+                
+                StateHasChanged();
+            }
+            catch(Exception ex)
+            {
+               
             }
         }
         
     }
-
     protected async Task Filtrar()
     {
 
         AsesorFor = await http.GetFromJsonAsync<IList<AsesorModel>>($"api/Asesor/filter?idEspecialidad={fr.idEspecialidad}&idTurno={@fr.idTurno}&Costo={fr.Costo}");
+        
     }
 }

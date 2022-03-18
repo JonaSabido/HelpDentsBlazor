@@ -1,5 +1,7 @@
 ﻿@page "/AsesorComentario/add"
-
+@using Microsoft.AspNetCore.Components.Server.ProtectedBrowserStorage
+@inject ProtectedSessionStorage SessionStorage
+@inject NavigationManager NavigationManager
 @using System.Net.Http
 @using System.Net.Http.Json
 @using HelpDentsProyecto.Data.Models
@@ -7,8 +9,13 @@
 @inject HttpClient http
 @inject NavigationManager NavigationManager
 
-
-<PageTitle>Agregar Comentarios a Asesor </PageTitle>
+@if(sesion == false)
+{
+    
+}
+else
+{
+    <PageTitle>Agregar Comentarios a Asesor </PageTitle>
 <h1>Agregar Comentarios de Asesores</h1>
 
 
@@ -27,6 +34,12 @@
         <a class="btn btn-danger" href="/AsesorComentario">Cancelar</a>
     </form> 
 </EditForm>
+}
+
+
+
+
+
 
 
 
@@ -34,7 +47,54 @@
 @code {
    
     AsesorHasComentarioModel ahe = new AsesorHasComentarioModel();
+    private ResponseLogin? user;
+    private bool sesion = false;
 
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender)
+        {
+            try
+            {
+
+                var result = await SessionStorage.GetAsync<string>("Token");
+                string Token = result.Success ? result.Value : "";
+
+                if(Token == "")
+                {
+                    NavigationManager.NavigateTo("/Login");
+                }
+
+                var request = new HttpRequestMessage(HttpMethod.Get, $"api/Login/ValidateToken/{Token}");
+                using var httpResponseInitial = await http.SendAsync(request);
+                user = await httpResponseInitial.Content.ReadFromJsonAsync<ResponseLogin>();
+
+
+                    if(user == null)
+                    {
+                        NavigationManager.NavigateTo("/Login");
+                    }
+                    else if(user.RolIdRol != 1)
+                    {
+                        NavigationManager.NavigateTo("/");
+                    }
+                    else
+                    {
+                        sesion = true;
+                        
+                    }
+                
+
+                StateHasChanged();
+                
+            }
+            catch(Exception ex)
+            {
+               
+            }
+        }
+        
+    }
 
     protected async Task Save()
     {

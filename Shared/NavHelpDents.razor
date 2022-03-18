@@ -30,7 +30,7 @@
          }
         else
         {
-           <a href="/Login" id="botonLogin"> Cerrar Sesión </a> 
+           <a @onclick="LogOut" id="botonLogin" href="/"> Cerrar Sesión </a> 
         }
 
       
@@ -61,6 +61,15 @@
                 id = 0;
             }
         }
-        
+
+    }
+
+    protected async Task LogOut()
+    {
+        await SessionStorage.DeleteAsync("Id");
+        await SessionStorage.DeleteAsync("Token");
+        await SessionStorage.DeleteAsync("Rol");
+        await SessionStorage.DeleteAsync("Correo");
+        id = 0;
     }
 }

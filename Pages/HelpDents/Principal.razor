@@ -1,12 +1,23 @@
 ﻿@page "/Principal"
 @layout NavHelpDents
-
-<PageTitle> HelpDents </PageTitle>
+@using Microsoft.AspNetCore.Components.Server.ProtectedBrowserStorage
+@inject ProtectedSessionStorage SessionStorage
+@inject NavigationManager NavigationManager
 @using HelpDentsProyecto.Data
 @using HelpDentsProyecto.Data.Models
 @using System.Net.Http
 @using System.Net.Http.Json
 @inject HttpClient http
+
+
+@if(sesion == false)
+{
+
+}
+else
+{    
+    <PageTitle> HelpDents </PageTitle>
+
 
 <div class="container">
   <div class="row">
@@ -16,59 +27,87 @@
                 <span class="oi oi-person" id="icon-user" />
             </div>
             <div class="col-sm-8">
-                <h1 id="nameUser"> Nombre de usuario </h1>
+                <h1 id="nameUser"> @Usuario.Nombres @Usuario.Apellidos </h1>
                 <a href="/MiPerfil" id="seeProfile"> Mi perfil </a> 
             </div>
-            <h3 id="txt">
-                Coviertete en un asesor para aparecer en la lista de personas disponibles a compartir
-                su conocimiento y ayudar a los demás. Tendrás que llenar algunos datos.
-            </h3>
-            <a href="/FormAsesor" id="btn-form">
-                Solicitar ser Asesor
-            </a>
+
+                    @if(Usuario.RolIdRol == 3)
+                    {
+                         <h3 id="txt">
+                            Coviertete en un asesor para aparecer en la lista de personas disponibles a compartir
+                            su conocimiento y ayudar a los demás. Tendrás que llenar algunos datos.
+                        </h3>
+                        <a href="/FormAsesor" id="btn-form">
+                            Solicitar ser Asesor
+                        </a>
+                    }
+                    else if(Usuario.RolIdRol == 2){
+                        <br />
+                        <a href="/FormAsesor" id="btn-form">
+                            Editar Informacion de Asesor
+                        </a>
+                    }
+                    
           
         </div>
-        <h2 id="titleComents">
-            Comentarios a mi perfil
-        </h2>
-       <div class="card">
-           <div class="row">
-               <div class="col-sm-2">
-                   <span class="oi oi-person" id="icon-user-comment"/>                 
-               </div>
-               <div class="col-sm-10">
-                   <h3 class="name-comentario"> Nombre Usuario </h3> 
-                   <p class="commentUser"> Excelente maestro, me gusta su manera de enseñar, recomendado </p>
-               </div>
 
-           </div>
-       </div>
+                @if(Usuario.RolIdRol == 2)
+                {
+                        <h2 id="titleComents">
+                            Comentarios a mi perfil
+                        </h2>
 
-       <div class="card">
-           <div class="row">
-               <div class="col-sm-2">
-                   <span class="oi oi-person" id="icon-user-comment"/>                 
-               </div>
-               <div class="col-sm-10">
-                   <h3 class="name-comentario"> Nombre Usuario </h3> 
-                   <p class="commentUser"> Excelente maestro, me gusta su manera de enseñar, recomendado </p>
-               </div>
 
-           </div>
-       </div>
+                        @if(AsesorComentarioFor == null)
+                        {
+                            
+                        }
+                        else
+                        {   
+                            @if(AsesorComentarioFor.Count() == 0)
+                            {
+                                <h2 id="alert"> Aún no hay comentarios </h2>
+                            }
+                            else
+                            {
+                                
+                                @foreach(var RecorridoAsesorComentario in AsesorComentarioFor)
+                                {
+                                    @if(ComentarioFor == null)
+                                    {
+                                    
+                                    }
+                                    else
+                                    {
+                                        @foreach(var RecorridoComentario in ComentarioFor)
+                                        {
+                                            @if(RecorridoAsesorComentario.Comentario_IdComentario == RecorridoComentario.Id)
+                                            {
+                                               <div class="card">
+                                                   <div class="row">
+                                                       <div class="col-sm-2">
+                                                           <span class="oi oi-person" id="icon-user-comment"/>                 
+                                                       </div>
+                                                       <div class="col-sm-10">
+                                                           <h3 class="name-comentario"> @RecorridoComentario.Nombres @RecorridoComentario.Apellidos </h3> 
+                                                           <p class="commentUser"> @RecorridoComentario.Descripcion </p>
+                                                       </div>
 
-       <div class="card">
-           <div class="row">
-               <div class="col-sm-2">
-                   <span class="oi oi-person" id="icon-user-comment"/>                 
-               </div>
-               <div class="col-sm-10">
-                   <h3 class="name-comentario"> Nombre Usuario </h3> 
-                   <p class="commentUser"> Excelente maestro, me gusta su manera de enseñar, recomendado </p>
-               </div>
+                                                   </div>
+                                                </div>                  
+                                            }
+                                        }
+                                    }
+                                }
+                                
+                             } 
+                        }
 
-           </div>
-       </div>
+                       
+
+                      
+                }
+                
 
     </div>
     <div class="col-sm-8" id="menu-asesores">
@@ -146,19 +185,87 @@
       
   </div>
 </div>
+}
+
+
 @code {
     private readonly string api = "api/Asesor/all";
     private readonly string api2 = "api/Especialidad/all";
     private readonly string api3 = "api/AsesorEspecialidad/all";
-    
+    private readonly string api4 = "api/Comentario/all";
+    private readonly string api5 = "api/Asesor/all";
+
     private IList<AsesorHasEspecialidadModel>? AsesorEspecialidadFor;
     private IList<AsesorModel>? AsesorFor;
     private IList<EspecialidadModel>? EspecialidadFor;
+    private IList<AsesorHasComentarioModel>? AsesorComentarioFor;
+    private IList<ComentarioModel>? ComentarioFor;
+    private ResponseLogin? user;
+    private bool sesion = false;
+    private UsuarioModel? Usuario;
 
-    protected override async Task OnInitializedAsync()
+    protected override async Task OnAfterRenderAsync(bool firstRender)
     {
-        AsesorFor = await http.GetFromJsonAsync<IList<AsesorModel>>(api);
-        EspecialidadFor = await http.GetFromJsonAsync<IList<EspecialidadModel>>(api2);
-        AsesorEspecialidadFor = await http.GetFromJsonAsync<IList<AsesorHasEspecialidadModel>>(api3);
+        if (firstRender)
+        {
+            try
+            {
+
+                var result = await SessionStorage.GetAsync<string>("Token");
+                string Token = result.Success ? result.Value : "";
+
+                if(Token == "")
+                {
+                    NavigationManager.NavigateTo("/Login");
+                }
+
+                var request = new HttpRequestMessage(HttpMethod.Get, $"api/Login/ValidateToken/{Token}");
+                using var httpResponseInitial = await http.SendAsync(request);
+                user = await httpResponseInitial.Content.ReadFromJsonAsync<ResponseLogin>();
+
+
+                if(user == null)
+                {
+                    NavigationManager.NavigateTo("/Login");
+                }
+                else if(user.RolIdRol == 1)
+                {
+                    NavigationManager.NavigateTo("/");
+                }
+                else
+                {
+                    sesion = true;
+                    AsesorFor = await http.GetFromJsonAsync<IList<AsesorModel>>(api);
+                    EspecialidadFor = await http.GetFromJsonAsync<IList<EspecialidadModel>>(api2);
+                    AsesorEspecialidadFor = await http.GetFromJsonAsync<IList<AsesorHasEspecialidadModel>>(api3);
+                    Usuario = await http.GetFromJsonAsync<UsuarioModel>($"api/Usuario/{user.id}");
+                    if (Usuario.RolIdRol == 2)
+                    {
+                        ComentarioFor = await http.GetFromJsonAsync<List<ComentarioModel>>(api4);
+                        AsesorModel asesor = AsesorFor.FirstOrDefault(x => x.UsuarioIdUsuario == Usuario.Id);
+
+                        var ComentariosAsesor = await http.GetFromJsonAsync<IList<AsesorHasComentarioModel>>($"api/AsesorComentario/asesor/{asesor.Id}");
+                        if (ComentariosAsesor != null)
+                        {
+                            AsesorComentarioFor = ComentariosAsesor;
+                        }
+
+                        
+
+                    }
+                        
+                }
+                
+                StateHasChanged();
+            }
+            catch(Exception ex)
+            {
+               
+            }
+        }
+        
     }
+
+
+
 }

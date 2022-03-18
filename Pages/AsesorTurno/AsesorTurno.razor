@@ -1,12 +1,23 @@
 ﻿@page "/AsesorTurno"
-
-<PageTitle>Turnos de Asesores</PageTitle>
-
+@using Microsoft.AspNetCore.Components.Server.ProtectedBrowserStorage
+@inject ProtectedSessionStorage SessionStorage
+@inject NavigationManager NavigationManager
 @using HelpDentsProyecto.Data
 @using HelpDentsProyecto.Data.Models
 @using System.Net.Http
 @using System.Net.Http.Json
 @inject HttpClient http
+
+
+@if(sesion == false)
+{
+    
+}
+else
+{
+    <PageTitle>Turnos de Asesores</PageTitle>
+
+
 
 <div class="tittle">
     <div class="tittle_content">
@@ -67,6 +78,9 @@ else
         </tbody>
     </table>
 }
+}
+
+
 
 @code {
     private readonly string api = $"api/AsesorTurno/all";
@@ -75,11 +89,55 @@ else
     private IList<AsesorHasTurnoModel>? AsesorTurnoFor;
     private IList<AsesorModel>? AsesorFor;
     private IList<TurnoModel>? TurnoFor;
+    private ResponseLogin? user;
+    private bool sesion = false;
 
-    protected override async Task OnInitializedAsync()
+    protected override async Task OnAfterRenderAsync(bool firstRender)
     {
-        AsesorTurnoFor = await http.GetFromJsonAsync<IList<AsesorHasTurnoModel>>(api);
-        AsesorFor = await http.GetFromJsonAsync<IList<AsesorModel>>(api2);
-        TurnoFor = await http.GetFromJsonAsync<IList<TurnoModel>>(api3);
+        if (firstRender)
+        {
+            try
+            {
+
+                var result = await SessionStorage.GetAsync<string>("Token");
+                string Token = result.Success ? result.Value : "";
+
+                if(Token == "")
+                {
+                    NavigationManager.NavigateTo("/Login");
+                }
+
+                var request = new HttpRequestMessage(HttpMethod.Get, $"api/Login/ValidateToken/{Token}");
+                using var httpResponseInitial = await http.SendAsync(request);
+                user = await httpResponseInitial.Content.ReadFromJsonAsync<ResponseLogin>();
+
+
+                    if(user == null)
+                    {
+                        NavigationManager.NavigateTo("/Login");
+                    }
+                    else if(user.RolIdRol != 1)
+                    {
+                        NavigationManager.NavigateTo("/");
+                    }
+                    else
+                    {
+                        sesion = true;
+                        AsesorTurnoFor = await http.GetFromJsonAsync<IList<AsesorHasTurnoModel>>(api);
+                        AsesorFor = await http.GetFromJsonAsync<IList<AsesorModel>>(api2);
+                        TurnoFor = await http.GetFromJsonAsync<IList<TurnoModel>>(api3);
+                        
+                    }
+                
+
+                StateHasChanged();
+                
+            }
+            catch(Exception ex)
+            {
+               
+            }
+        }
+        
     }
 }

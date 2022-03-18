@@ -1,6 +1,7 @@
 @page "/Asesor"
-
-<PageTitle>Asesor</PageTitle>
+@using Microsoft.AspNetCore.Components.Server.ProtectedBrowserStorage
+@inject ProtectedSessionStorage SessionStorage
+@inject NavigationManager NavigationManager
 
 @using HelpDentsProyecto.Data
 @using HelpDentsProyecto.Data.Models
@@ -8,7 +9,14 @@
 @using System.Net.Http.Json
 @inject HttpClient http
 
-<div class="tittle">
+@if(sesion == false)
+{
+    
+}
+else
+{
+    <PageTitle>Asesor</PageTitle>
+    <div class="tittle">
     <div class="tittle_content">
         <h1>Asesor</h1>
     </div>
@@ -70,13 +78,59 @@ else
         </tbody>
     </table>
 }
+}
+
+
 
 @code {
     private readonly string api = "api/Asesor/all";
     private IList<AsesorModel>? AsesorFor;
+    private ResponseLogin? user;
+    private bool sesion = false;
 
-    protected override async Task OnInitializedAsync()
+    protected override async Task OnAfterRenderAsync(bool firstRender)
     {
-        AsesorFor = await http.GetFromJsonAsync<IList<AsesorModel>>(api);
+        if (firstRender)
+        {
+            try
+            {
+
+                var result = await SessionStorage.GetAsync<string>("Token");
+                string Token = result.Success ? result.Value : "";
+
+                if(Token == "")
+                {
+                    NavigationManager.NavigateTo("/Login");
+                }
+
+                var request = new HttpRequestMessage(HttpMethod.Get, $"api/Login/ValidateToken/{Token}");
+                using var httpResponseInitial = await http.SendAsync(request);
+                user = await httpResponseInitial.Content.ReadFromJsonAsync<ResponseLogin>();
+
+
+                    if(user == null)
+                    {
+                        NavigationManager.NavigateTo("/Login");
+                    }
+                    else if(user.RolIdRol != 1)
+                    {
+                        NavigationManager.NavigateTo("/");
+                    }
+                    else
+                    {
+                        sesion = true;
+                        AsesorFor = await http.GetFromJsonAsync<IList<AsesorModel>>(api);
+                    }
+                
+
+                StateHasChanged();
+                
+            }
+            catch(Exception ex)
+            {
+               
+            }
+        }
+        
     }
 }

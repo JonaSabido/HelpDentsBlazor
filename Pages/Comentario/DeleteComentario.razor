@@ -1,18 +1,30 @@
 ﻿@page "/Comentario/delete/{id:int}"
+@using Microsoft.AspNetCore.Components.Server.ProtectedBrowserStorage
+@inject ProtectedSessionStorage SessionStorage
+@inject NavigationManager NavigationManager
+@using HelpDentsProyecto.Data.Models
+@using System.Net.Http
+@using System.Net.Http.Json
+@inject HttpClient http
 
-<PageTitle>Borrar Especialidad</PageTitle>
+@if(sesion == false)
+{
+    
+}
+else
+{
+    <PageTitle>Borrar Especialidad</PageTitle>
 
 <h1> ¿Esta seguro que desea eliminar el Comentario con Id <b> @esp?.Id ?</b> </h1>
 <br />
 <button  class="btn btn-primary" @onclick = "ConfirmDelete">Confirmar</button>
 <a class="btn btn-danger" href="/Comentario">Cancelar</a>
+}
 
 
-@using HelpDentsProyecto.Data.Models
-@using System.Net.Http
-@using System.Net.Http.Json
-@inject HttpClient http
-@inject NavigationManager NavigationManager
+
+
+
 
 @code{
     [Parameter]
@@ -20,9 +32,54 @@
     public int id {get; set;}
 
     ComentarioModel? esp;
+    private ResponseLogin? user;
+    private bool sesion = false;
 
-    protected override async Task OnInitializedAsync(){
-        esp = await http.GetFromJsonAsync<ComentarioModel>($"api/Comentario/{id}");
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender)
+        {
+            try
+            {
+
+                var result = await SessionStorage.GetAsync<string>("Token");
+                string Token = result.Success ? result.Value : "";
+
+                if(Token == "")
+                {
+                    NavigationManager.NavigateTo("/Login");
+                }
+
+                var request = new HttpRequestMessage(HttpMethod.Get, $"api/Login/ValidateToken/{Token}");
+                using var httpResponseInitial = await http.SendAsync(request);
+                user = await httpResponseInitial.Content.ReadFromJsonAsync<ResponseLogin>();
+
+
+                    if(user == null)
+                    {
+                        NavigationManager.NavigateTo("/Login");
+                    }
+                    else if(user.RolIdRol != 1)
+                    {
+                        NavigationManager.NavigateTo("/");
+                    }
+                    else
+                    {
+                        sesion = true;
+                        esp = await http.GetFromJsonAsync<ComentarioModel>($"api/Comentario/{id}");
+                        
+                    }
+                
+
+                StateHasChanged();
+                
+            }
+            catch(Exception ex)
+            {
+               
+            }
+        }
+        
     }
     private async Task ConfirmDelete(){
         var response = await http.DeleteAsync($"api/Comentario/{id}");

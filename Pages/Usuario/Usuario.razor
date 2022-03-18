@@ -1,14 +1,22 @@
 ﻿@page "/Usuario"
-
-<PageTitle>Usuarios</PageTitle>
-
+@using Microsoft.AspNetCore.Components.Server.ProtectedBrowserStorage
+@inject ProtectedSessionStorage SessionStorage
+@inject NavigationManager NavigationManager
 @using HelpDentsProyecto.Data
 @using HelpDentsProyecto.Data.Models
 @using System.Net.Http
 @using System.Net.Http.Json
 @inject HttpClient http
 
-<div class="tittle">
+<PageTitle>Usuarios</PageTitle>
+
+@if(sesion == false)
+{
+
+}
+else
+{    
+    <div class="tittle">
     <div class="tittle_content">
         <h1>Usuario</h1>
     </div>
@@ -74,13 +82,63 @@ else
         </tbody>
     </table>
 }
+}
+
+
+
+
 
 @code {
     private readonly string api = "api/Usuario/all";
     private IList<UsuarioModel>? UsuarioFor;
+    private ResponseLogin? userLog;
+    private bool sesion = false;
 
-    protected override async Task OnInitializedAsync()
+    protected override async Task OnAfterRenderAsync(bool firstRender)
     {
-        UsuarioFor = await http.GetFromJsonAsync<IList<UsuarioModel>>(api);
+        if (firstRender)
+        {
+            try
+            {
+
+                var result = await SessionStorage.GetAsync<string>("Token");
+                string Token = result.Success ? result.Value : "";
+
+                if(Token == "")
+                {
+                    NavigationManager.NavigateTo("/Login");
+                }
+
+                var request = new HttpRequestMessage(HttpMethod.Get, $"api/Login/ValidateToken/{Token}");
+                using var httpResponseInitial = await http.SendAsync(request);
+                userLog = await httpResponseInitial.Content.ReadFromJsonAsync<ResponseLogin>();
+
+
+                    if(userLog == null)
+                    {
+                        NavigationManager.NavigateTo("/Login");
+                    }
+                    else if(userLog.RolIdRol != 1)
+                    {
+                        NavigationManager.NavigateTo("/");
+                    }
+                    else
+                    {
+                        sesion = true;
+                        UsuarioFor = await http.GetFromJsonAsync<IList<UsuarioModel>>(api);
+                        
+                    }
+                
+
+                StateHasChanged();
+                
+            }
+            catch(Exception ex)
+            {
+               
+            }
+        }
+        
     }
+
 }

@@ -9,143 +9,23 @@
 @using System.Text.Json
 @using System.Text
 @inject ProtectedSessionStorage SessionStorage
+@inject NavigationManager NavigationManager
 
-<PageTitle>Home</PageTitle>
-
-<h1>Bienvenido Administrador</h1>
-<link rel="stylesheet" href="~/css/index.css" />
-
-
-<h5 class="alert alert-success">La mision de HelpDents es ser un apoyo para los estudiantes. Esta pagina tiene finalidad, mostrar un acceso rapido a los registros mas utiles en este trabajo.</h5>
-
-
-<br />
-<br />
-
-<h2> Asesores recientes </h2>
-@if (AsesorFor == null)
+@if(sesion == false)
 {
-    <p><em>Loading...</em></p>
+
 }
 else
-{
-    <table class="table">
-        <thead class="table table-dark" >
-            <tr>
-                <th>Nombres</th>
-                <th>Apellidos</th>
-                <th>Especialidad</th>
-            
-            </tr>
-        </thead>
-        <tbody>
-        @{
-            int step = 1;
-       
-        }
-            @foreach (var RecorridoAsesor in AsesorFor.Reverse())
-            {
-                @if(step <= 3)
-                {
-                    <tr>
-                        <td>@RecorridoAsesor.Nombres</td>
-                        <td>@RecorridoAsesor.Apellidos</td>
-                        <td>@RecorridoAsesor.Especialidad</td>
-                    </tr>
-                }
-                step++;
-                
-            }
-        </tbody>
-    </table>
-}
-
-<br />
-<br />
-
-<h2> Comentarios recientes </h2>
-@if (ComentarioFor == null)
-{
-    <p><em>Loading...</em></p>
-}
-else
-{
-    <table class="table">
-        <thead class="table table-dark">
-            <tr>
-                <th>Id</th>
-                <th>Usuario</th>
-                <th>Descripcion</th>
-            </tr>
-        </thead>
-        <tbody>
-            @{
-            int step2 = 1;
-            }
-            @foreach (var RecorridoComentario in ComentarioFor)
-            {
-                @if(step2 <= 3)
-                {
-                    <tr>
-                    <td>@RecorridoComentario.Id</td>
-                    <td>@RecorridoComentario.Nombres @RecorridoComentario.Apellidos</td>
-                    <td>@RecorridoComentario.Descripcion</td>
-                </tr>
-                }
-                step2++;
-            }
-        </tbody>
-    </table>
-}
-
-<br />
-<br />
-
-<h2> Usuarios recientes </h2>
-@if (UsuarioFor == null)
-{
-    <p><em>Loading...</em></p>
-}
-else
-{
-    <table class="table">
-        <thead class="table table-dark">
-            <tr>
-                <th>Nombres</th>
-                <th>Apellidos</th>
-                <th>Correo</th>
-                <th>Contraseña</th>
-            </tr>
-        </thead>
-        <tbody>
-            @{
-                int step3 = 1;
-            }
-            @foreach (var UsuarioRecorrido in UsuarioFor)
-            {
-                @if(step3 <= 3)
-                {
-                    <tr>
-                    <td>@UsuarioRecorrido.Nombres</td>
-                    <td>@UsuarioRecorrido.Apellidos</td>
-                    <td>@UsuarioRecorrido.Correo</td>
-                    <td>@UsuarioRecorrido.Contraseña</td>
-                </tr>
-                }
-                step3++;
-            }
-        </tbody>
-    </table>
+{    
+    <PageTitle>Home</PageTitle>
+    <h1>Bienvenido Administrador</h1>
+    <link rel="stylesheet" href="~/css/index.css" />
 }
 
 
 @code {
-    private readonly string api = "api/Asesor/all";
-    private IList<AsesorModel>? AsesorFor;
-    private readonly string api2 = "api/Usuario/all";
-    private IList<UsuarioModel>? UsuarioFor;
-    private readonly string api3 = "api/Comentario/all";
-    private IList<ComentarioModel>? ComentarioFor;
+    private ResponseLogin? user;
+    private bool sesion = false;
 
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {
@@ -153,19 +33,41 @@ else
         {
             try
             {
-                var request = new HttpRequestMessage(HttpMethod.Get, api2);
+
                 var result = await SessionStorage.GetAsync<string>("Token");
                 string Token = result.Success ? result.Value : "";
+
+                if(Token == "")
+                {
+                    NavigationManager.NavigateTo("/Login");
+                }
+
+                var request = new HttpRequestMessage(HttpMethod.Get, $"api/Login/ValidateToken/{Token}");
+                using var httpResponseInitial = await http.SendAsync(request);
+                user = await httpResponseInitial.Content.ReadFromJsonAsync<ResponseLogin>();
+
+
+                    if(user == null)
+                    {
+                        NavigationManager.NavigateTo("/Login");
+                    }
+                    else if(user.RolIdRol != 1)
+                    {
+                        NavigationManager.NavigateTo("/");
+                    }
+                    else
+                    {
+                        sesion = true;
+                    }
+                
+
+               /* var request2 = new HttpRequestMessage(HttpMethod.Get, api2);
                 TokenSend tokensend = new TokenSend();
                 tokensend.Token = Token;
-
-                request.Headers.Add("Authorization", Token);
-                request.Content = new StringContent(JsonSerializer.Serialize(tokensend), Encoding.UTF8, "application/json");;
-                using var httpResponse = await http.SendAsync(request);
-
-                AsesorFor = await http.GetFromJsonAsync<IList<AsesorModel>>(api);
-                UsuarioFor = await httpResponse.Content.ReadFromJsonAsync<IList<UsuarioModel>>();
-                ComentarioFor = await http.GetFromJsonAsync<IList<ComentarioModel>>(api3); 
+                request2.Headers.Add("Authorization", Token);
+                request2.Content = new StringContent(JsonSerializer.Serialize(tokensend), Encoding.UTF8, "application/json");;
+                using var httpResponse = await http.SendAsync(request2);
+                UsuarioFor = await httpResponse.Content.ReadFromJsonAsync<IList<UsuarioModel>>(); */
                 StateHasChanged();
             }
             catch(Exception ex)

@@ -1,18 +1,31 @@
 ﻿@page "/AsesorComentario/delete/{id:int}"
-
-<PageTitle>Borrar Comentario de Asesor</PageTitle>
-
-<h1> ¿Esta seguro que desea eliminar el comentario <b> @Comentario?.Id </b> perteneciente al asesor <b> @Asesor?.Nombres @Asesor?.Apellidos</b> </h1>
-<br />
-<button  class="btn btn-primary" @onclick = "ConfirmDelete">Confirmar</button>
-<a class="btn btn-danger" href="/AsesorEspecialidad">Cancelar</a>
-
-
+@using Microsoft.AspNetCore.Components.Server.ProtectedBrowserStorage
+@inject ProtectedSessionStorage SessionStorage
+@inject NavigationManager NavigationManager
 @using HelpDentsProyecto.Data.Models
 @using System.Net.Http
 @using System.Net.Http.Json
 @inject HttpClient http
-@inject NavigationManager NavigationManager
+
+
+@if(sesion == false)
+{
+    
+}
+else
+{
+    <PageTitle>Borrar Comentario de Asesor</PageTitle>
+
+<h1> ¿Esta seguro que desea eliminar el comentario <b> @Comentario?.Id </b> perteneciente al asesor <b> @Asesor?.Nombres @Asesor?.Apellidos</b> </h1>
+<br />
+<button  class="btn btn-primary" @onclick = "ConfirmDelete">Confirmar</button>
+<a class="btn btn-danger" href="/AsesorEspecialidad">Cancelar</a>   
+}
+
+
+
+
+
 
 @code{
     [Parameter]
@@ -22,12 +35,56 @@
     AsesorHasComentarioModel? AsesorComentario;
     AsesorModel? Asesor;
     ComentarioModel? Comentario;
+    private ResponseLogin? user;
+    private bool sesion = false;
 
-    protected override async Task OnInitializedAsync(){
-        AsesorComentario = await http.GetFromJsonAsync<AsesorHasComentarioModel>($"api/AsesorComentario/{id}");
-        Asesor = await http.GetFromJsonAsync<AsesorModel>($"api/asesor/{AsesorComentario?.Asesor_idAsesor}");
-        Comentario = await http.GetFromJsonAsync<ComentarioModel>($"api/comentario/{AsesorComentario?.Comentario_IdComentario}");
-    
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender)
+        {
+            try
+            {
+
+                var result = await SessionStorage.GetAsync<string>("Token");
+                string Token = result.Success ? result.Value : "";
+
+                if(Token == "")
+                {
+                    NavigationManager.NavigateTo("/Login");
+                }
+
+                var request = new HttpRequestMessage(HttpMethod.Get, $"api/Login/ValidateToken/{Token}");
+                using var httpResponseInitial = await http.SendAsync(request);
+                user = await httpResponseInitial.Content.ReadFromJsonAsync<ResponseLogin>();
+
+
+                    if(user == null)
+                    {
+                        NavigationManager.NavigateTo("/Login");
+                    }
+                    else if(user.RolIdRol != 1)
+                    {
+                        NavigationManager.NavigateTo("/");
+                    }
+                    else
+                    {
+                        sesion = true;
+                        AsesorComentario = await http.GetFromJsonAsync<AsesorHasComentarioModel>($"api/AsesorComentario/{id}");
+                        Asesor = await http.GetFromJsonAsync<AsesorModel>($"api/asesor/{AsesorComentario?.Asesor_idAsesor}");
+                        Comentario = await http.GetFromJsonAsync<ComentarioModel>($"api/comentario/{AsesorComentario?.Comentario_IdComentario}");
+                        
+                    }
+                
+
+                StateHasChanged();
+                
+            }
+            catch(Exception ex)
+            {
+               
+            }
+        }
+        
     }
     
     private async Task ConfirmDelete(){
