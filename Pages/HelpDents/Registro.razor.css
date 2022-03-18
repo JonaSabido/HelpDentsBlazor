@@ -29,18 +29,18 @@ body{
     font-family: Monument;
     color: rgb(155, 155, 155);
 }
-.master form input[type="text"], input[type="password"]{
+.master form input[type="text"], input[type="password"], input[type="email"]{
     width: 85%;
     padding: 1.5%;
     margin-top: 2%;
     margin-bottom: 5%;
     font-size: 1vw;
 }
-.master form input[type="text"]:focus, input[type="password"]:focus{
-    border: 2px #ff2020 solid;
-    outline: none;
-}
-.master form input[type="button"]{
+    .master form input[type="text"]:focus, input[type="password"], input[type="email"]:focus {
+        border: 2px #ff2020 solid;
+        outline: none;
+    }
+.master form button{
     width: 85%;
     padding: 1.7%;
     margin-top: 5%;
@@ -52,7 +52,7 @@ body{
     border: 3px #FF123A solid;
     margin-bottom: 5%;
 }
-.master form input[type="button"]:hover{
+.master form button:hover{
     background-color: #ffffff;
     color: #FF123A;
     cursor: pointer;
@@ -91,14 +91,14 @@ body{
     .master form label{
         font-size: 3.7vw;
     }
-    .master form input[type="text"], input[type="password"]{
-        width: 85%;
-        padding: 2.5%;
-        border-radius: 2%;
-        margin-top: 2%;
-        margin-bottom: 5%;
-        font-size: 2.2vw;
-    }
+        .master form input[type="text"], input[type="password"], input[type="email"] {
+            width: 85%;
+            padding: 2.5%;
+            border-radius: 2%;
+            margin-top: 2%;
+            margin-bottom: 5%;
+            font-size: 2.2vw;
+        }
     .master form input[type="button"]{
         width: 85%;
         padding: 2.7%;
@@ -133,14 +133,14 @@ body{
     .master form label{
         font-size: 3.2vw;
     }
-    .master form input[type="text"], input[type="password"]{
-        width: 85%;
-        padding: 2%;
-        border-radius: 2%;
-        margin-top: 2%;
-        margin-bottom: 5%;
-        font-size: 2vw;
-    }
+        .master form input[type="text"], input[type="password"], input[type="email"] {
+            width: 85%;
+            padding: 2%;
+            border-radius: 2%;
+            margin-top: 2%;
+            margin-bottom: 5%;
+            font-size: 2vw;
+        }
     .master form input[type="button"]{
         width: 85%;
         padding: 2.2%;
@@ -174,14 +174,14 @@ body{
     .master form label{
         font-size: 2.5vw;
     }
-    .master form input[type="text"], input[type="password"]{
-        width: 85%;
-        padding: 1%;
-        border-radius: 2%;
-        margin-top: 2%;
-        margin-bottom: 5%;
-        font-size: 1.5vw;
-    }
+        .master form input[type="text"], input[type="password"], input[type="email"] {
+            width: 85%;
+            padding: 1%;
+            border-radius: 2%;
+            margin-top: 2%;
+            margin-bottom: 5%;
+            font-size: 1.5vw;
+        }
     .master form input[type="button"]{
         width: 85%;
         padding: 1%;
@@ -202,3 +202,4 @@ body{
         margin-top: 7%;
     }
 }
+

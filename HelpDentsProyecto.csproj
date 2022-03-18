@@ -7,6 +7,10 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="Data\TokenClass.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
     <None Remove="Pages\HelpDents\FormularioAsesor.razor.css" />
     <None Remove="Pages\HelpDents\MiPerfil.razor.css" />
     <None Remove="Pages\HelpDents\Principal.razor.css" />
@@ -23,12 +27,21 @@
   </ItemGroup>
 
   <ItemGroup>
+    <PackageReference Include="Blazored.LocalStorage" Version="4.2.0" />
     <PackageReference Include="LibSassBuilder" Version="2.0.1" />
+    <PackageReference Include="Microsoft.IdentityModel.Tokens" Version="6.16.0" />
+    <PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="6.16.0" />
   </ItemGroup>
 
   <ItemGroup>
     <None Include="wwwroot\css\Pages\index.css" />
     <None Include="wwwroot\images\fondo.png" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Data\Auth\" />
+    <Folder Include="Data\Response\" />
+    <Folder Include="Middleware\" />
   </ItemGroup>
 
 </Project>

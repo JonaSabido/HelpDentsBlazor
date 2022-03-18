@@ -4,15 +4,15 @@ using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Web;
 using Microsoft.AspNetCore.Components.Authorization;
 using Microsoft.Extensions.DependencyInjection;
-using HelpDentsProyecto.Data.Auth;
+using HelpDentsProyecto.Shared;
+
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddRazorPages();
 builder.Services.AddServerSideBlazor();
-builder.Services.AddAuthorizationCore();
-builder.Services.AddScoped<AuthenticationStateProvider, AuthStateProviderFalse>();
+builder.Services.AddScoped<NavHelpDents>();
 
 var clientHandler = new HttpClientHandler();
 clientHandler.ServerCertificateCustomValidationCallback = 
@@ -21,6 +21,11 @@ clientHandler.ServerCertificateCustomValidationCallback =
 builder.Services.AddSingleton(new HttpClient(clientHandler) {
     BaseAddress = new Uri("https://localhost:5001")
 });
+
+
+
+
+
 
 var app = builder.Build();
 

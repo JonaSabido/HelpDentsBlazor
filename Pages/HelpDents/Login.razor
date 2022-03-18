@@ -1,19 +1,93 @@
 ﻿@page "/Login"
 @layout NavLogin
+
+@using HelpDentsProyecto.Data
+@using HelpDentsProyecto.Data.Models
+@using System.Net.Http
+@using System.Net.Http.Json
+@inject HttpClient http
+@inject NavigationManager NavigationManager
+@using System.Text.Json;
+@using System.Text.Json.Serialization;
+@using System.Text
+@using Microsoft.AspNetCore.Components.Server.ProtectedBrowserStorage
+@inject ProtectedSessionStorage SessionStorage
+
+
 <link rel="stylesheet" href="/css/Pages/index.css">
     <div class="master">
             <img src="/images/logo_version_wyr.png" />
-            <form>
+            <EditForm Model = "@login">
+                <form @onsubmit="Request">
                 <label> Correo Electronico: </label>
-                <input type="text">
+                <input type="text"  @bind-value="@login.Correo">
                 <label> Contraseña: </label>
-                <input type="password">
-                <a href="/Principal" id="btn-login"><input type="button" value="Iniciar Sesión"></a>
+                <input type="password" @bind-value="@login.Contraseña">
+                @if(requestfail == true)
+            {
+                <h1 id="alert-fail"> CREDENCIALES INCORRECTAS </h1>
+            }
+                <button type="submit" value="Iniciar Sesión"> Iniciar sesion </button>
             </form>
+            </EditForm>
+            
             <a href="/Registro"> ¿No tienes una cuenta? Registrate </a>
     </div>
 
 
+
 @code {
+    RequestLogin login = new RequestLogin();
+    bool requestfail = false;
+
+    private ResponseLogin? logResponse;
+    protected async Task Request()
+    {
+
+        var request = new HttpRequestMessage(HttpMethod.Post, "https://localhost:5001/api/login");
+
+        // request.Headers.Add("Email", "cr@gmail.com");
+        // request.Headers.Add("Password", "anime"); 
+
+        request.Content = new StringContent(JsonSerializer.Serialize(login), Encoding.UTF8, "application/json");
+
+        using var httpResponse = await http.SendAsync(request);
+
+        //response = await http.GetFromJsonAsync<RequestLogin>("api/Login", request!);
+
+        logResponse = await httpResponse.Content.ReadFromJsonAsync<ResponseLogin>();
+
+        if(httpResponse.IsSuccessStatusCode)
+        {
+            await SessionStorage.SetAsync("Id", @logResponse.id);
+            await SessionStorage.SetAsync("Token", @logResponse.Token);
+            await SessionStorage.SetAsync("Rol", @logResponse.RolIdRol);
+            await SessionStorage.SetAsync("Correo", @logResponse.Correo);
+
+            if(logResponse.RolIdRol == 2 || logResponse.RolIdRol == 3)
+            {
+                NavigationManager.NavigateTo("/Principal");
+            }
+            else if(logResponse.RolIdRol == 1)
+            {
+                NavigationManager.NavigateTo("/Index");
+            }
+
+            
+
+        }
+        else
+        {
+            requestfail = true;
+        }
+
+
+    }
+
+    public async Task<int> ReadId()
+    {
+        var result = await SessionStorage.GetAsync<int>("Id");
+        return result.Success ? result.Value : 0;
+    }
 
 }

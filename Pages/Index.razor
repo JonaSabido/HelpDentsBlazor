@@ -4,6 +4,11 @@
 @using System.Net.Http
 @using System.Net.Http.Json
 @inject HttpClient http
+@using Microsoft.AspNetCore.Components.Server.ProtectedBrowserStorage
+@using System.Net.Http.Headers
+@using System.Text.Json
+@using System.Text
+@inject ProtectedSessionStorage SessionStorage
 
 <PageTitle>Home</PageTitle>
 
@@ -142,11 +147,33 @@ else
     private readonly string api3 = "api/Comentario/all";
     private IList<ComentarioModel>? ComentarioFor;
 
-    protected override async Task OnInitializedAsync()
+    protected override async Task OnAfterRenderAsync(bool firstRender)
     {
-        AsesorFor = await http.GetFromJsonAsync<IList<AsesorModel>>(api);
-        UsuarioFor = await http.GetFromJsonAsync<IList<UsuarioModel>>(api2);
-        ComentarioFor = await http.GetFromJsonAsync<IList<ComentarioModel>>(api3);
+        if (firstRender)
+        {
+            try
+            {
+                var request = new HttpRequestMessage(HttpMethod.Get, api2);
+                var result = await SessionStorage.GetAsync<string>("Token");
+                string Token = result.Success ? result.Value : "";
+                TokenSend tokensend = new TokenSend();
+                tokensend.Token = Token;
+
+                request.Headers.Add("Authorization", Token);
+                request.Content = new StringContent(JsonSerializer.Serialize(tokensend), Encoding.UTF8, "application/json");;
+                using var httpResponse = await http.SendAsync(request);
+
+                AsesorFor = await http.GetFromJsonAsync<IList<AsesorModel>>(api);
+                UsuarioFor = await httpResponse.Content.ReadFromJsonAsync<IList<UsuarioModel>>();
+                ComentarioFor = await http.GetFromJsonAsync<IList<ComentarioModel>>(api3); 
+                StateHasChanged();
+            }
+            catch(Exception ex)
+            {
+               
+            }
+        }
+        
     }
 
    

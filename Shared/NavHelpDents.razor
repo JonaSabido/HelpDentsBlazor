@@ -1,5 +1,6 @@
-﻿@inherits LayoutComponentBase  
-
+﻿@inherits LayoutComponentBase
+@using Microsoft.AspNetCore.Components.Server.ProtectedBrowserStorage
+@inject ProtectedSessionStorage SessionStorage
 
 @using HelpDentsProyecto.Data.Models
 @using HelpDentsProyecto.Data
@@ -22,8 +23,16 @@
       </div> 
    
   <div>
-      <a href="/Registro" id="botonRegistro"> Registrarse </a>
-      <a href="/Login" id="botonLogin"> Iniciar Sesión </a>
+      @if(id == 0)
+        {
+            <a href="/Registro" id="botonRegistro"> Registrarse </a>
+            <a href="/Login" id="botonLogin"> Iniciar Sesión </a>
+         }
+        else
+        {
+           <a href="/Login" id="botonLogin"> Cerrar Sesión </a> 
+        }
+
       
   </div>
 
@@ -35,4 +44,23 @@
 
 @code{
     UsuarioModel user = new UsuarioModel();
+    int id;
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender)
+        {
+            try
+            {
+                var result = await SessionStorage.GetAsync<int>("Id");
+                id = result.Success ? result.Value : 0;
+                StateHasChanged();
+            }
+            catch(Exception ex)
+            {
+                id = 0;
+            }
+        }
+        
+    }
 }
