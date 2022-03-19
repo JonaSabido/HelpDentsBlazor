@@ -17,6 +17,7 @@ else
     <PageTitle>Borrar Comentario de Asesor</PageTitle>
 
 <h1> ¿Esta seguro que desea eliminar el comentario <b> @Comentario?.Id </b> perteneciente al asesor <b> @Asesor?.Nombres @Asesor?.Apellidos</b> </h1>
+<h5><i>esto eliminará de manera automatica el comentario relacionado </i></h5>
 <br />
 <button  class="btn btn-primary" @onclick = "ConfirmDelete">Confirmar</button>
 <a class="btn btn-danger" href="/AsesorEspecialidad">Cancelar</a>   
@@ -58,38 +59,41 @@ else
                 user = await httpResponseInitial.Content.ReadFromJsonAsync<ResponseLogin>();
 
 
-                    if(user == null)
-                    {
-                        NavigationManager.NavigateTo("/Login");
-                    }
-                    else if(user.RolIdRol != 1)
-                    {
-                        NavigationManager.NavigateTo("/");
-                    }
-                    else
-                    {
-                        sesion = true;
-                        AsesorComentario = await http.GetFromJsonAsync<AsesorHasComentarioModel>($"api/AsesorComentario/{id}");
-                        Asesor = await http.GetFromJsonAsync<AsesorModel>($"api/asesor/{AsesorComentario?.Asesor_idAsesor}");
-                        Comentario = await http.GetFromJsonAsync<ComentarioModel>($"api/comentario/{AsesorComentario?.Comentario_IdComentario}");
-                        
-                    }
-                
+                if(user == null)
+                {
+                    NavigationManager.NavigateTo("/Login");
+                }
+                else if(user.RolIdRol != 1)
+                {
+                    NavigationManager.NavigateTo("/");
+                }
+                else
+                {
+                    sesion = true;
+                    AsesorComentario = await http.GetFromJsonAsync<AsesorHasComentarioModel>($"api/AsesorComentario/{id}");
+                    Asesor = await http.GetFromJsonAsync<AsesorModel>($"api/asesor/{AsesorComentario?.Asesor_idAsesor}");
+                    Comentario = await http.GetFromJsonAsync<ComentarioModel>($"api/comentario/{AsesorComentario?.Comentario_IdComentario}");
+
+                }
+
 
                 StateHasChanged();
-                
+
             }
             catch(Exception ex)
             {
-               
+
             }
         }
-        
+
     }
-    
+
     private async Task ConfirmDelete(){
+        var response2 = await http.GetFromJsonAsync<AsesorHasComentarioModel>($"api/AsesorComentario/{id}");
         var response = await http.DeleteAsync($"api/AsesorComentario/{id}");
-        if(response.IsSuccessStatusCode){
+        var response3 = await http.DeleteAsync($"api/Comentario/{response2.Comentario_IdComentario}");
+
+        if(response3.IsSuccessStatusCode){
             NavigationManager.NavigateTo("/AsesorComentario");
         }
     }

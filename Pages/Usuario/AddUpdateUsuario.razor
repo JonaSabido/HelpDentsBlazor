@@ -36,6 +36,10 @@ else
             <div class="mb-2"> 
                 <label class="form-label" for="name"> Correo</label>
                 <input type="email" class="form-control" @bind-value="@user.Correo" id="Correo" required></input>
+                @if(alert == true)
+                {
+                    <div class="alert alert-danger"> Ya existe un usuario con este correo</div>
+                }
             </div>
         
          <div class="mb-2">
@@ -70,6 +74,7 @@ else
     UsuarioModel user = new UsuarioModel();
     private ResponseLogin? userLog;
     private bool sesion = false;
+    private bool alert = false;
 
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {
@@ -91,40 +96,40 @@ else
                 userLog = await httpResponseInitial.Content.ReadFromJsonAsync<ResponseLogin>();
 
 
-                    if(userLog == null)
+                if(userLog == null)
+                {
+                    NavigationManager.NavigateTo("/Login");
+                }
+                else if(userLog.RolIdRol != 1)
+                {
+                    NavigationManager.NavigateTo("/");
+                }
+                else
+                {
+                    sesion = true;
+                    isUpdate = id != 0;
+                    if (isUpdate)
                     {
-                        NavigationManager.NavigateTo("/Login");
-                    }
-                    else if(userLog.RolIdRol != 1)
-                    {
-                        NavigationManager.NavigateTo("/");
-                    }
-                    else
-                    {
-                        sesion = true;
-                        isUpdate = id != 0;
-                        if (isUpdate)
+                        var response = await http.GetFromJsonAsync<UsuarioModel>($"api/usuario/{id}");
+                        if (response != null)
                         {
-                            var response = await http.GetFromJsonAsync<UsuarioModel>($"api/usuario/{id}");
-                            if (response != null)
-                            {
-                                user = response;
-                            }
-
+                            user = response;
                         }
-                        loading = false;
+
                     }
-                
+                    loading = false;
+                }
+
 
                 StateHasChanged();
-                
+
             }
             catch(Exception ex)
             {
-               
+
             }
         }
-        
+
     }
 
 
@@ -134,13 +139,43 @@ else
         if (isUpdate)
         {
             response = await http.PutAsJsonAsync<UsuarioModel>($"api/usuario/{id}", user!);
+            if (!response.IsSuccessStatusCode)
+            {
+                alert = true;
+            }
+            else
+            {
+                if(userLog.id == id)
+                {
+                    await SessionStorage.DeleteAsync("Id");
+                    await SessionStorage.DeleteAsync("Token");
+                    await SessionStorage.DeleteAsync("Rol");
+                    await SessionStorage.DeleteAsync("Correo");
+                    id = 0;
+                    NavigationManager.NavigateTo("/Login");
+                }
+                else
+                {
+                    NavigationManager.NavigateTo("/Usuario");
+                }
+
+            }
         }
         else
         {
             response = await http.PostAsJsonAsync<UsuarioModel>("api/usuario", user!);
+            if (!response.IsSuccessStatusCode)
+            {
+                alert = true;
+            }
+            else
+            {
+                NavigationManager.NavigateTo("/Usuario");
+
+            }
         }
         
-        NavigationManager.NavigateTo("/Usuario");
+        
         
 
     }
