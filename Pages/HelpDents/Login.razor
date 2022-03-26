@@ -1,6 +1,6 @@
 ﻿@page "/Login"
 @layout NavLogin
-
+<PageTitle> HelpDents | Login </PageTitle>
 @using HelpDentsProyecto.Data
 @using HelpDentsProyecto.Data.Models
 @using System.Net.Http
@@ -27,11 +27,13 @@
             {
                 <h1 id="alert-fail"> CREDENCIALES INCORRECTAS </h1>
             }
-                <button type="submit" value="Iniciar Sesión"> Iniciar sesion </button>
+                <button type="submit"> Iniciar sesion </button>
             </form>
             </EditForm>
             
-            <a href="/Registro"> ¿No tienes una cuenta? Registrate </a>
+            <div id="btn">
+                <a href="/Registro"> ¿No tienes una cuenta? Registrate </a>
+            </div>
     </div>
 
 

@@ -1,5 +1,6 @@
 ﻿@page "/Registro"
 @layout NavLogin
+<PageTitle> HelpDents | Registro </PageTitle>
 @using HelpDentsProyecto.Data.Models
 @using System.Net.Http
 @using System.Net.Http.Json
@@ -20,38 +21,52 @@
             <input type="text" @bind-value="user.Apellidos" required>
             <label> Correo Electronico: </label>
             <input type="email" @bind-value="user.Correo" required>
+            @if (requestfail == true)
+            {
+                <h1 id="alert-fail"> Ya existe una cuenta con este correo </h1>
+            }
             <label> Contraseña: </label>
             <input type="password" @bind-value="user.Contraseña" required>
             <button type="submit"> Registrar </button>
         </form>
     </EditForm>
+
+
+    <div id="btn">
         <a href="/Login"> ¿Ya tienes una cuenta? Inicia sesión </a>
+    </div>
 </div>
 
 
 @code {
     private UsuarioModel user = new UsuarioModel();
     private bool loading;
+    bool requestfail = false;
 
     private async void OnValidSubmit()
     {
-    // reset alerts on submit
+        // reset alerts on submit
 
 
 
         loading = true;
         try
         {
+            user.RolIdRol = 3;
             var response = await http.PostAsJsonAsync<UsuarioModel>($"api/Register", user!);
-
-            if (response.IsSuccessStatusCode){
+            if (response.IsSuccessStatusCode)
+            {
                 NavigationManager.NavigateTo("/Login");
             }
-            
+            else
+            {
+                requestfail = true;
+            }
+
         }
         catch (Exception)
         {
-          
+
             loading = false;
             StateHasChanged();
         }

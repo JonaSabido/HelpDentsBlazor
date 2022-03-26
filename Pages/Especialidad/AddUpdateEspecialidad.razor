@@ -10,27 +10,31 @@
 @using HelpDentsProyecto.Data
 @inject HttpClient http
 
-@if(sesion == false)
+@if (sesion == false)
 {
-    
+
 }
 else
 {
     <PageTitle>@(isUpdate ? $"Editar Especialidad[Id:{esp.Id}]" : "Agregar Especialidad") </PageTitle>
-<h1>@(isUpdate ? $"Editar Especialidad[Id:{esp.Id}]" : "Agregar Especialidad")</h1>
+    <h1>@(isUpdate ? $"Editar Especialidad[Id:{esp.Id}]" : "Agregar Especialidad")</h1>
 
 
 
-<EditForm Model="@esp"> 
-    <form class="container border" @onsubmit="Save">
-        <div class="mb-2">
-            <label class="form-label" for="name">Nombre</label>
-            <input type="text" class="form-control" @bind-value="@esp.Nombre" id="Nombre" required></input>
-        </div>
-        <button type="submit" class="btn btn-primary">Guardar</button>
-        <a class="btn btn-danger" href="/Especialidad">Cancelar</a>
-    </form> 
-</EditForm>
+    <EditForm Model="@esp">
+        <form class="container border" @onsubmit="Save">
+            <div class="mb-2">
+                <label class="form-label" for="name">Nombre</label>
+                <input type="text" class="form-control" @bind-value="@esp.Nombre" id="Nombre" required></input>
+                @if (alert == true)
+                {
+                    <div class="alert alert-danger"> Ya existe una especialidad con este nombre</div>
+                }
+            </div>
+            <button type="submit" class="btn btn-primary">Guardar</button>
+            <a class="btn btn-danger" href="/Especialidad">Cancelar</a>
+        </form>
+    </EditForm>
 }
 
 
@@ -46,6 +50,7 @@ else
     EspecialidadModel esp = new EspecialidadModel();
     private ResponseLogin? user;
     private bool sesion = false;
+    private bool alert = false;
 
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {
@@ -57,7 +62,7 @@ else
                 var result = await SessionStorage.GetAsync<string>("Token");
                 string Token = result.Success ? result.Value : "";
 
-                if(Token == "")
+                if (Token == "")
                 {
                     NavigationManager.NavigateTo("/Login");
                 }
@@ -67,41 +72,41 @@ else
                 user = await httpResponseInitial.Content.ReadFromJsonAsync<ResponseLogin>();
 
 
-                    if(user == null)
+                if (user == null)
+                {
+                    NavigationManager.NavigateTo("/Login");
+                }
+                else if (user.RolIdRol != 1)
+                {
+                    NavigationManager.NavigateTo("/");
+                }
+                else
+                {
+                    sesion = true;
+                    isUpdate = id != 0;
+                    if (isUpdate)
                     {
-                        NavigationManager.NavigateTo("/Login");
-                    }
-                    else if(user.RolIdRol != 1)
-                    {
-                        NavigationManager.NavigateTo("/");
-                    }
-                    else
-                    {
-                        sesion = true;
-                        isUpdate = id != 0;
-                        if (isUpdate)
+                        var response = await http.GetFromJsonAsync<EspecialidadModel>($"api/Especialidad/{id}");
+                        if (response != null)
                         {
-                            var response = await http.GetFromJsonAsync<EspecialidadModel>($"api/Especialidad/{id}");
-                            if (response != null)
-                            {
-                                esp = response;
-                            }
-
+                            esp = response;
                         }
-                        loading = false;
-                        
+
                     }
-                
+                    loading = false;
+
+                }
+
 
                 StateHasChanged();
-                
+
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
-               
+
             }
         }
-        
+
     }
 
     protected async Task Save()
@@ -110,17 +115,28 @@ else
         if (isUpdate)
         {
             response = await http.PutAsJsonAsync<EspecialidadModel>($"api/Especialidad/{id}", esp!);
+            if (!response.IsSuccessStatusCode)
+            {
+                alert = true;
+            }
+            else
+            {
+                NavigationManager.NavigateTo("/Especialidad");
+            }
         }
         else
         {
             response = await http.PostAsJsonAsync<EspecialidadModel>("api/Especialidad", esp!);
+            if (!response.IsSuccessStatusCode)
+            {
+                alert = true;
+
+            }
+            else
+            {
+                alert = false;
+                NavigationManager.NavigateTo("/Especialidad");
+            }
         }
-        
-        NavigationManager.NavigateTo("/Especialidad");
-        
-
     }
-
-
-
 }

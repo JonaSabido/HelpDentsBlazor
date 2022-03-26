@@ -9,18 +9,25 @@
 @inject NavigationManager NavigationManager
 
 
-@if(sesion == false)
+@if (sesion == false)
 {
-    
+
 }
 else
 {
     <PageTitle>Borrar Asesor</PageTitle>
 
-        <h1> ¿Esta seguro que desea eliminar al asesor <b> @asesor?.Nombres ?</b> </h1>
+    <h1> ¿Esta seguro que desea eliminar al asesor <b> @asesor?.Nombres ?</b> </h1>
+    <br />
+    <button class="btn btn-primary" @onclick="ConfirmDelete">Confirmar</button>
+    <a class="btn btn-danger" href="/Asesor">Cancelar</a>
+
+    @if (alert == true)
+    {
         <br />
-        <button  class="btn btn-primary" @onclick = "ConfirmDelete">Confirmar</button>
-        <a class="btn btn-danger" href="/Asesor">Cancelar</a>
+        <hr />
+        <div class="alert alert-danger"> Este asesor no puede ser eliminado ya que esta relacionado en otras tablas. Elimine primero las dependencias.</div>
+    }
 }
 
 
@@ -28,14 +35,15 @@ else
 
 
 
-@code{
+@code {
     [Parameter]
-    
-    public int id {get; set;}
+
+    public int id { get; set; }
 
     AsesorModel? asesor;
     private ResponseLogin? user;
     private bool sesion = false;
+    private bool alert = false;
 
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {
@@ -47,7 +55,7 @@ else
                 var result = await SessionStorage.GetAsync<string>("Token");
                 string Token = result.Success ? result.Value : "";
 
-                if(Token == "")
+                if (Token == "")
                 {
                     NavigationManager.NavigateTo("/Login");
                 }
@@ -57,37 +65,43 @@ else
                 user = await httpResponseInitial.Content.ReadFromJsonAsync<ResponseLogin>();
 
 
-                    if(user == null)
-                    {
-                        NavigationManager.NavigateTo("/Login");
-                    }
-                    else if(user.RolIdRol != 1)
-                    {
-                        NavigationManager.NavigateTo("/");
-                    }
-                    else
-                    {
-                        sesion = true;
-                        asesor = await http.GetFromJsonAsync<AsesorModel>($"api/Asesor/{id}");
-                        
-                    }
-                
+                if (user == null)
+                {
+                    NavigationManager.NavigateTo("/Login");
+                }
+                else if (user.RolIdRol != 1)
+                {
+                    NavigationManager.NavigateTo("/");
+                }
+                else
+                {
+                    sesion = true;
+                    asesor = await http.GetFromJsonAsync<AsesorModel>($"api/Asesor/{id}");
+
+                }
+
 
                 StateHasChanged();
-                
+
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
-               
+
             }
         }
-        
+
     }
 
-    private async Task ConfirmDelete(){
+    private async Task ConfirmDelete()
+    {
         var response = await http.DeleteAsync($"api/Asesor/{id}");
-        if(response.IsSuccessStatusCode){
+        if (response.IsSuccessStatusCode)
+        {
             NavigationManager.NavigateTo("/Asesor");
+        }
+        else
+        {
+            alert = true;
         }
     }
 

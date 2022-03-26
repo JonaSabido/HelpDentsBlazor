@@ -130,7 +130,7 @@ p{
     margin-top: 3%;
     padding-left: 5%;
     padding-right: 5%;
-    height: 50%;
+    height: 200px;
     overflow-y: scroll;
     scroll-behavior: smooth;
 }
@@ -165,4 +165,10 @@ p{
     padding-top: 2%;
     padding-bottom: 1%;
     text-align: center;
+}
+#trash{
+    color: #FF123A;
+}
+#trash:hover{
+    cursor: pointer;
 }

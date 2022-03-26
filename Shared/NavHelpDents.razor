@@ -72,6 +72,8 @@
         await SessionStorage.DeleteAsync("Rol");
         await SessionStorage.DeleteAsync("Correo");
         id = 0;
+        NavigationManager.NavigateTo("/");
+        await OnInitializedAsync();
     }
 
     protected async Task Send()

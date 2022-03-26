@@ -19,17 +19,24 @@ else
     <br />
     <button  class="btn btn-primary" @onclick = "ConfirmDelete">Confirmar</button>
     <a class="btn btn-danger" href="/Especialidad">Cancelar</a>
+    @if (alert == true)
+    {
+        <br />
+        <hr />
+        <div class="alert alert-danger"> Esta especialidad no puede ser eliminada ya que esta relacionada con asesores. Elimine primero las dependencias.</div>
+    }
 }
 
 
 @code{
     [Parameter]
-    
+
     public int id {get; set;}
 
     EspecialidadModel? esp;
     private ResponseLogin? user;
     private bool sesion = false;
+    private bool alert = false;
 
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {
@@ -51,37 +58,41 @@ else
                 user = await httpResponseInitial.Content.ReadFromJsonAsync<ResponseLogin>();
 
 
-                    if(user == null)
-                    {
-                        NavigationManager.NavigateTo("/Login");
-                    }
-                    else if(user.RolIdRol != 1)
-                    {
-                        NavigationManager.NavigateTo("/");
-                    }
-                    else
-                    {
-                        sesion = true;
-                        esp = await http.GetFromJsonAsync<EspecialidadModel>($"api/Especialidad/{id}");
-                        
-                    }
-                
+                if(user == null)
+                {
+                    NavigationManager.NavigateTo("/Login");
+                }
+                else if(user.RolIdRol != 1)
+                {
+                    NavigationManager.NavigateTo("/");
+                }
+                else
+                {
+                    sesion = true;
+                    esp = await http.GetFromJsonAsync<EspecialidadModel>($"api/Especialidad/{id}");
+
+                }
+
 
                 StateHasChanged();
-                
+
             }
             catch(Exception ex)
             {
-               
+
             }
         }
-        
+
     }
 
     private async Task ConfirmDelete(){
         var response = await http.DeleteAsync($"api/Especialidad/{id}");
         if(response.IsSuccessStatusCode){
             NavigationManager.NavigateTo("/Especialidad");
+        }
+        else
+        {
+            alert = true;
         }
     }
 

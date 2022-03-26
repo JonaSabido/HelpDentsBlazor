@@ -8,31 +8,41 @@
 @using HelpDentsProyecto.Data
 @inject HttpClient http
 
-@if(sesion == false)
+@if (sesion == false)
 {
-    
+
 }
 else
 {
     <PageTitle>Agregar turnos de Asesores </PageTitle>
-<h1>Agregar turnos de Asesores</h1>
+    <h1>Agregar turnos de Asesores</h1>
 
 
 
-<EditForm Model="@aht"> 
-    <form class="container border" @onsubmit="Save">
-        <div class="mb-2">
-            <label class="form-label" for="name">Asesor Id</label>
-            <input type="number" class="form-control" @bind-value="@aht.Asesor_idAsesor" id="idAsesor" required></input>
-        </div>
-        <div class="mb-2">
-            <label class="form-label" for="name">Turno Id</label>
-            <input type="number" class="form-control" @bind-value="@aht.Turno_idTurno" id="idTurno" required></input>
-        </div>
-        <button type="submit" class="btn btn-primary">Guardar</button>
-        <a class="btn btn-danger" href="/AsesorTurno">Cancelar</a>
-    </form> 
-</EditForm>
+    <EditForm Model="@aht">
+        <form class="container border" @onsubmit="Save">
+            <div class="mb-2">
+                <label class="form-label" for="name">Asesor Id</label>
+                <input type="number" class="form-control" @bind-value="@aht.Asesor_idAsesor" id="idAsesor" required></input>
+                @if(alert == true)
+                {
+                    <div class="alert alert-danger"> El id de Asesor no existe o ya existe una relación entre el asesor y el turno. Verifica la información.</div>
+                }
+            </div>
+            <div class="mb-2">
+                <label class="form-label" for="name">Turno</label>
+                <select class="form-control" required @bind = "@aht.Turno_idTurno">
+                    <option value=1 selected> Matutino </option>
+                    <option value=2> Vespertino </option>
+                    <option value=3> Nocturno </option>
+                </select>
+            </div>
+            <button type="submit" class="btn btn-primary">Guardar</button>
+            <a class="btn btn-danger" href="/AsesorTurno">Cancelar</a>
+            <br>
+            
+        </form>
+    </EditForm>
 }
 
 
@@ -44,10 +54,11 @@ else
 
 
 @code {
-   
+
     AsesorHasTurnoModel aht = new AsesorHasTurnoModel();
     private ResponseLogin? user;
     private bool sesion = false;
+    private bool alert = false;
 
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {
@@ -59,7 +70,7 @@ else
                 var result = await SessionStorage.GetAsync<string>("Token");
                 string Token = result.Success ? result.Value : "";
 
-                if(Token == "")
+                if (Token == "")
                 {
                     NavigationManager.NavigateTo("/Login");
                 }
@@ -69,40 +80,49 @@ else
                 user = await httpResponseInitial.Content.ReadFromJsonAsync<ResponseLogin>();
 
 
-                    if(user == null)
-                    {
-                        NavigationManager.NavigateTo("/Login");
-                    }
-                    else if(user.RolIdRol != 1)
-                    {
-                        NavigationManager.NavigateTo("/");
-                    }
-                    else
-                    {
-                        sesion = true;
-                        
-                    }
-                
+                if (user == null)
+                {
+                    NavigationManager.NavigateTo("/Login");
+                }
+                else if (user.RolIdRol != 1)
+                {
+                    NavigationManager.NavigateTo("/");
+                }
+                else
+                {
+                    sesion = true;
+
+                }
+
 
                 StateHasChanged();
-                
+
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
-               
+
             }
         }
-        
+
     }
 
     protected async Task Save()
     {
         HttpResponseMessage? response;
-       
+
         response = await http.PostAsJsonAsync<AsesorHasTurnoModel>("api/AsesorTurno", aht!);
+        if (!response.IsSuccessStatusCode)
+        {
+            alert = true;
+        }
+        else
+        {
+            alert = false;
+            NavigationManager.NavigateTo("/AsesorTurno");
+        }
+
         
-        NavigationManager.NavigateTo("/AsesorTurno");
-        
+
 
     }
 

@@ -9,31 +9,32 @@
 @using System.Net.Http.Json
 @inject HttpClient http
 
+<PageTitle> Home </PageTitle>
 
-@if(sesion == false)
+@if (sesion == false)
 {
 
 }
 else
-{    
+{
     <PageTitle> HelpDents </PageTitle>
 
 
-<div class="container">
-  <div class="row">
-    <div class="col-sm-4 position-fixed" id="profile">
+    <div class="container">
         <div class="row">
-            <div class="col-sm-4">
-                <span class="oi oi-person" id="icon-user" />
-            </div>
-            <div class="col-sm-8">
-                <h1 id="nameUser"> @Usuario.Nombres @Usuario.Apellidos </h1>
-                <a href="/MiPerfil" id="seeProfile"> Mi perfil </a> 
-            </div>
+            <div class="col-sm-4 position-fixed" id="profile">
+                <div class="row">
+                    <div class="col-sm-4">
+                        <span class="oi oi-person" id="icon-user" />
+                    </div>
+                    <div class="col-sm-8">
+                        <h1 id="nameUser"> @Usuario.Nombres @Usuario.Apellidos </h1>
+                        <a href="/MiPerfil" id="seeProfile"> Mi perfil </a>
+                    </div>
 
-                    @if(Usuario.RolIdRol == 3)
+                    @if (Usuario.RolIdRol == 3)
                     {
-                         <h3 id="txt">
+                        <h3 id="txt">
                             Coviertete en un asesor para aparecer en la lista de personas disponibles a compartir
                             su conocimiento y ayudar a los demás. Tendrás que llenar algunos datos.
                         </h3>
@@ -41,150 +42,153 @@ else
                             Solicitar ser Asesor
                         </a>
                     }
-                    else if(Usuario.RolIdRol == 2){
-                        <br />
-                        <a href="/FormAsesor" id="btn-form">
-                            Editar Informacion de Asesor
+                    else if (Usuario.RolIdRol == 2)
+                    {
+                        <h3 id="txt">
+                            No olvides tener siempre actualizada tu información como asesor.
+                        </h3>
+                        <a href="/FormAsesor/Update/@id" id="btn-form">
+                            Actualizar Informacion de Asesor
                         </a>
                     }
-                    
-          
-        </div>
 
-                @if(Usuario.RolIdRol == 2)
+
+                </div>
+
+                @if (Usuario.RolIdRol == 2)
                 {
-                        <h2 id="titleComents">
-                            Comentarios a mi perfil
-                        </h2>
+                    <h2 id="titleComents">
+                        Comentarios a mi perfil
+                    </h2>
 
 
-                        @if(AsesorComentarioFor == null)
+                    @if (AsesorComentarioFor == null)
+                    {
+
+                    }
+                    else
+                    {
+                        @if (AsesorComentarioFor.Count() == 0)
                         {
-                            
+                            <h2 id="alert"> Aún no hay comentarios </h2>
                         }
                         else
-                        {   
-                            @if(AsesorComentarioFor.Count() == 0)
-                            {
-                                <h2 id="alert"> Aún no hay comentarios </h2>
-                            }
-                            else
-                            {
-                                
-                                @foreach(var RecorridoAsesorComentario in AsesorComentarioFor)
-                                {
-                                    @if(ComentarioFor == null)
-                                    {
-                                    
-                                    }
-                                    else
-                                    {
-                                        @foreach(var RecorridoComentario in ComentarioFor)
-                                        {
-                                            @if(RecorridoAsesorComentario.Comentario_IdComentario == RecorridoComentario.Id)
-                                            {
-                                               <div class="card">
-                                                   <div class="row">
-                                                       <div class="col-sm-2">
-                                                           <span class="oi oi-person" id="icon-user-comment"/>                 
-                                                       </div>
-                                                       <div class="col-sm-10">
-                                                           <h3 class="name-comentario"> @RecorridoComentario.Nombres @RecorridoComentario.Apellidos </h3> 
-                                                           <p class="commentUser"> @RecorridoComentario.Descripcion </p>
-                                                       </div>
+                        {
 
-                                                   </div>
-                                                </div>                  
-                                            }
+                            @foreach (var RecorridoAsesorComentario in AsesorComentarioFor)
+                            {
+                                @if (ComentarioFor == null)
+                                {
+
+                                }
+                                else
+                                {
+                                    @foreach (var RecorridoComentario in ComentarioFor)
+                                    {
+                                        @if (RecorridoAsesorComentario.Comentario_IdComentario == RecorridoComentario.Id)
+                                        {
+                                            <div class="card">
+                                                <div class="row">
+                                                    <div class="col-sm-2">
+                                                        <span class="oi oi-person" id="icon-user-comment" />
+                                                    </div>
+                                                    <div class="col-sm-10">
+                                                        <h3 class="name-comentario"> @RecorridoComentario.Nombres @RecorridoComentario.Apellidos </h3>
+                                                        <p class="commentUser"> @RecorridoComentario.Descripcion </p>
+                                                    </div>
+
+                                                </div>
+                                            </div>
                                         }
                                     }
                                 }
-                                
-                             } 
+                            }
+
                         }
-
-                       
-
-                      
-                }
-                
-
-    </div>
-    <div class="col-sm-8" id="menu-asesores">
-         <h1 id="title-asesores">
-             <b>Asesores Recientes</b>
-         </h1>
-         @{
-                int step = 1;
-         }
-         @if (AsesorFor == null)
-          {
-                <p><em>Loading...</em></p>
-          }
-          else
-          {
-                @foreach (var RecorridoAsesor in AsesorFor)
-                {
-                    if(step <= 5)
-                    {
-                            <div id="asesor-card"> 
-                            <div class="row">
-                                <div class="col-sm-2">
-
-                                    <span class="oi oi-person" id="icon-asesor" />
-                                </div>
-                                <div class="col-sm-7" id="info-asesor">
-                                    <h2 id="nameAsesor"> <b>@RecorridoAsesor.Nombres @RecorridoAsesor.Apellidos</b> </h2>
-
-
-                                    <h3 id="number">
-                                        <span class="oi oi-briefcase" id="icon-phone"></span>
-                                        @foreach(var RecorridoAsesorEspecialidad in AsesorEspecialidadFor)
-                                        {
-                                            if(RecorridoAsesorEspecialidad.Asesor_idAsesor == @RecorridoAsesor.Id)
-                                            {
-                                                @foreach(var RecorridoEspecialidad in EspecialidadFor)
-                                                {
-                                                
-                                                    if(RecorridoAsesorEspecialidad.Especialidad_idEspecialidad == RecorridoEspecialidad.Id)
-                                                    {
-                                                        @RecorridoEspecialidad.Nombre <text>. </text>
-                                                    }
-                                                
-                                                }
-
-                                            }
-                                        }
-                                    
-                                    </h3>
-
-
-                                    <h3 id="number">
-                                        <span class="oi oi-dollar" id="icon-phone"></span>
-                                        @RecorridoAsesor.Costo
-                                    </h3>
-
-                                </div>
-                                <div class="col-sm-3" id="divBtn">
-                                    <a href="/Asesor/@RecorridoAsesor.Id" id="seeAsesor"> Ver Perfil </a>
-                                </div>
-                            </div>
-                        </div>
                     }
 
-                    step++;
-                }
-          }
-        <div id="btn-all">
-            <a href="/Asesores/Search">
-                <button id="seeAll" acti> Ver lista de asesores </button>
-            </a>
-        </div>
 
-      </div>
-      
-  </div>
-</div>
+
+
+                }
+
+
+            </div>
+            <div class="col-sm-8" id="menu-asesores">
+                <h1 id="title-asesores">
+                    <b>Asesores Recientes</b>
+                </h1>
+                @{
+                    int step = 1;
+                }
+                @if (AsesorFor == null)
+                {
+                    <p><em>Loading...</em></p>
+                }
+                else
+                {
+                    @foreach (var RecorridoAsesor in AsesorFor)
+                    {
+                        if (step <= 5)
+                        {
+                            <div id="asesor-card">
+                                <div class="row">
+                                    <div class="col-sm-2">
+
+                                        <span class="oi oi-person" id="icon-asesor" />
+                                    </div>
+                                    <div class="col-sm-7" id="info-asesor">
+                                        <h2 id="nameAsesor"> <b>@RecorridoAsesor.Nombres @RecorridoAsesor.Apellidos</b> </h2>
+
+
+                                        <h3 id="number">
+                                            <span class="oi oi-briefcase" id="icon-phone"></span>
+                                            @foreach (var RecorridoAsesorEspecialidad in AsesorEspecialidadFor)
+                                            {
+                                                if (RecorridoAsesorEspecialidad.Asesor_idAsesor == @RecorridoAsesor.Id)
+                                                {
+                                                    @foreach (var RecorridoEspecialidad in EspecialidadFor)
+                                                    {
+
+                                                        if (RecorridoAsesorEspecialidad.Especialidad_idEspecialidad == RecorridoEspecialidad.Id)
+                                                        {
+                                                            @RecorridoEspecialidad.Nombre <text>. </text>
+                                                        }
+
+                                                    }
+
+                                                }
+                                            }
+
+                                        </h3>
+
+
+                                        <h3 id="number">
+                                            <span class="oi oi-dollar" id="icon-phone"></span>
+                                            @RecorridoAsesor.Costo
+                                        </h3>
+
+                                    </div>
+                                    <div class="col-sm-3" id="divBtn">
+                                        <a href="/Asesor/@RecorridoAsesor.Id" id="seeAsesor"> Ver Perfil </a>
+                                    </div>
+                                </div>
+                            </div>
+                        }
+
+                        step++;
+                    }
+                }
+                <div id="btn-all">
+                    <a href="/Asesores/Search">
+                        <button id="seeAll" acti> Ver lista de asesores </button>
+                    </a>
+                </div>
+
+            </div>
+
+        </div>
+    </div>
 }
 
 
@@ -203,6 +207,7 @@ else
     private ResponseLogin? user;
     private bool sesion = false;
     private UsuarioModel? Usuario;
+    int id;
 
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {
@@ -214,7 +219,10 @@ else
                 var result = await SessionStorage.GetAsync<string>("Token");
                 string Token = result.Success ? result.Value : "";
 
-                if(Token == "")
+                var result2 = await SessionStorage.GetAsync<int>("Id");
+                id = result2.Success ? result2.Value : 0;
+
+                if (Token == "")
                 {
                     NavigationManager.NavigateTo("/Login");
                 }
@@ -224,11 +232,11 @@ else
                 user = await httpResponseInitial.Content.ReadFromJsonAsync<ResponseLogin>();
 
 
-                if(user == null)
+                if (user == null)
                 {
                     NavigationManager.NavigateTo("/Login");
                 }
-                else if(user.RolIdRol == 1)
+                else if (user.RolIdRol == 1)
                 {
                     NavigationManager.NavigateTo("/");
                 }
@@ -250,20 +258,20 @@ else
                             AsesorComentarioFor = ComentariosAsesor;
                         }
 
-                        
+
 
                     }
-                        
+
                 }
-                
+
                 StateHasChanged();
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
-               
+
             }
         }
-        
+
     }
 
 

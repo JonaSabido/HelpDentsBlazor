@@ -17,6 +17,7 @@ else
 
 <h1> ¿Esta seguro que desea eliminar el Comentario con Id <b> @esp?.Id ?</b> </h1>
 <br />
+<div class="alert alert-warning"> ¡Esto eliminará de manera automática la relacion que hay con el asesor al que va dirigdo el comentario!</div>
 <button  class="btn btn-primary" @onclick = "ConfirmDelete">Confirmar</button>
 <a class="btn btn-danger" href="/Comentario">Cancelar</a>
 }
@@ -82,8 +83,10 @@ else
         
     }
     private async Task ConfirmDelete(){
-        var response = await http.DeleteAsync($"api/Comentario/{id}");
-        if(response.IsSuccessStatusCode){
+        var response1 = await http.GetFromJsonAsync<AsesorHasComentarioModel>($"api/AsesorComentario/comentario/{id}");
+        var respons2 = await http.DeleteAsync($"api/AsesorComentario/{response1.Id}");
+        var response3 = await http.DeleteAsync($"api/Comentario/{id}");
+        if(response3.IsSuccessStatusCode){
             NavigationManager.NavigateTo("/Comentario");
         }
     }

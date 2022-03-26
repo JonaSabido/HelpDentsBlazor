@@ -17,7 +17,7 @@ else
     <PageTitle>Borrar Comentario de Asesor</PageTitle>
 
 <h1> ¿Esta seguro que desea eliminar el comentario <b> @Comentario?.Id </b> perteneciente al asesor <b> @Asesor?.Nombres @Asesor?.Apellidos</b> </h1>
-<h5><i>esto eliminará de manera automatica el comentario relacionado </i></h5>
+<div class="alert alert-warning"> ¡Esto eliminará de manera automática el comentario relacionado!</div>
 <br />
 <button  class="btn btn-primary" @onclick = "ConfirmDelete">Confirmar</button>
 <a class="btn btn-danger" href="/AsesorEspecialidad">Cancelar</a>   

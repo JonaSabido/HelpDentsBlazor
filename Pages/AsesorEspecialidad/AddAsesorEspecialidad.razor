@@ -11,31 +11,47 @@
 @inject NavigationManager NavigationManager
 
 
-@if(sesion == false)
+@if (sesion == false)
 {
-    
+
 }
 else
 {
     <PageTitle>Agregar Especialidad de Asesor </PageTitle>
-<h1>Agregar Especialidad de Asesor</h1>
+    <h1>Agregar Especialidad de Asesor</h1>
 
 
 
-<EditForm Model="@ahe"> 
-    <form class="container border" @onsubmit="Save">
-        <div class="mb-2">
-            <label class="form-label" for="name">Asesor Id</label>
-            <input type="number" class="form-control" @bind-value="@ahe.Asesor_idAsesor" id="idAsesor" required></input>
-        </div>
-        <div class="mb-2">
-            <label class="form-label" for="name">Especialidad Id</label>
-            <input type="number" class="form-control" @bind-value="@ahe.Especialidad_idEspecialidad" id="idEspecialidad" required></input>
-        </div>
-        <button type="submit" class="btn btn-primary">Guardar</button>
-        <a class="btn btn-danger" href="/AsesorEspecialidad">Cancelar</a>
-    </form> 
-</EditForm>
+    <EditForm Model="@ahe">
+        <form class="container border" @onsubmit="Save">
+            <div class="mb-2">
+                <label class="form-label" for="name">Asesor Id</label>
+                <input type="number" class="form-control" @bind-value="@ahe.Asesor_idAsesor" id="idAsesor" required></input>
+                @if (alert == true)
+                {
+                    <div class="alert alert-danger"> El id de Asesor no existe o ya existe una relación entre el asesor y la especialidad. Verifica la información.</div>
+                }
+            </div>
+            <div class="mb-2">
+                <label class="form-label" for="name">Especialidad</label>
+                <select class="form-control" @bind="@ahe.Especialidad_idEspecialidad" required>
+                    @if (EspecialidadFor == null)
+                    {
+
+                    }
+                    else
+                    {
+                        @foreach (var RecorridoEspecialidad in EspecialidadFor)
+                        {
+                            <option value=@RecorridoEspecialidad.Id> @RecorridoEspecialidad.Nombre </option>
+                        }
+                    }
+                </select>
+            </div>
+            <button type="submit" class="btn btn-primary">Guardar</button>
+            <a class="btn btn-danger" href="/AsesorEspecialidad">Cancelar</a>
+        </form>
+    </EditForm>
 }
 
 
@@ -48,6 +64,9 @@ else
     AsesorHasEspecialidadModel ahe = new AsesorHasEspecialidadModel();
     private ResponseLogin? user;
     private bool sesion = false;
+    private bool alert = false;
+    private readonly string api = "api/Especialidad/all";
+    private IList<EspecialidadModel>? EspecialidadFor;
 
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {
@@ -59,7 +78,7 @@ else
                 var result = await SessionStorage.GetAsync<string>("Token");
                 string Token = result.Success ? result.Value : "";
 
-                if(Token == "")
+                if (Token == "")
                 {
                     NavigationManager.NavigateTo("/Login");
                 }
@@ -69,30 +88,31 @@ else
                 user = await httpResponseInitial.Content.ReadFromJsonAsync<ResponseLogin>();
 
 
-                    if(user == null)
-                    {
-                        NavigationManager.NavigateTo("/Login");
-                    }
-                    else if(user.RolIdRol != 1)
-                    {
-                        NavigationManager.NavigateTo("/");
-                    }
-                    else
-                    {
-                        sesion = true;
-                        
-                    }
-                
+                if (user == null)
+                {
+                    NavigationManager.NavigateTo("/Login");
+                }
+                else if (user.RolIdRol != 1)
+                {
+                    NavigationManager.NavigateTo("/");
+                }
+                else
+                {
+                    sesion = true;
+                    EspecialidadFor = await http.GetFromJsonAsync<IList<EspecialidadModel>>(api);
+
+                }
+
 
                 StateHasChanged();
-                
+
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
-               
+
             }
         }
-        
+
     }
     protected async Task Save()
     {
@@ -100,9 +120,18 @@ else
 
 
         response = await http.PostAsJsonAsync<AsesorHasEspecialidadModel>("api/AsesorEspecialidad", ahe!);
+        if (!response.IsSuccessStatusCode)
+        {
+            alert = true;
+        }
+        else
+        {
+            alert = false;
+            NavigationManager.NavigateTo("/AsesorEspecialidad");
+        }
 
-        NavigationManager.NavigateTo("/AsesorEspecialidad");
         
+
 
     }
 
