@@ -1,0 +1,52 @@
+﻿.container{
+}
+h3{
+    text-align: center;
+    color: #b1b1b1;
+    font-size: 1.1vw;
+    margin-top: 5%;
+}
+.header{
+    background-color: white;
+    padding: 4%;
+    border-radius: 10px;
+
+}
+.sol {
+    background-color: white;
+    padding: 1.5%;
+    border-radius: 10px;
+    margin-top: 1%;
+    width: 100%;
+}
+.sol:hover{
+    background-color: #ff0000;
+    color: white;
+
+}
+.oi-clipboard{
+    font-size: 1.3vw;
+    color: #000585;
+}
+.solicitud{
+    text-decoration: none;
+    color: black;
+}
+h5 {
+    color: #000585;
+}
+h4{
+    font-size: 1vw;
+}
+
+.btn-primary {
+    background-color: white;
+    border: 1px #000585 solid;
+    color: #000585;
+}
+
+    .btn-primary:hover {
+        background-color: #000585;
+        border: 1px #000585 solid;
+        color: white;
+    }

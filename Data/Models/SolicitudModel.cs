@@ -2,7 +2,8 @@
 {
     public class SolicitudModel
     {
-        public int UsuarioIdUsuario { get; set; }
+        public int? IdSolicitud { get; set; }
+        public int? UsuarioIdUsuario { get; set; }
         public string? Especialidad1 { get; set; }
         public string? Especialidad2 { get; set; }
         public string? Especialidad3 { get; set; }

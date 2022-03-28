@@ -15,6 +15,7 @@
     <None Remove="Pages\HelpDents\MiPerfil.razor.css" />
     <None Remove="Pages\HelpDents\Principal.razor.css" />
     <None Remove="Pages\HelpDents\Registro.razor.css" />
+    <None Remove="Pages\SolicitudPage.razor.css" />
     <None Remove="Shared\NavLogin.razor.css" />
   </ItemGroup>
 
@@ -23,6 +24,7 @@
     <Content Include="Pages\HelpDents\MiPerfil.razor.css" />
     <Content Include="Pages\HelpDents\Principal.razor.css" />
     <Content Include="Pages\HelpDents\Registro.razor.css" />
+    <Content Include="Pages\SolicitudPage.razor.css" />
     <Content Include="Shared\NavLogin.razor.css" />
   </ItemGroup>
 

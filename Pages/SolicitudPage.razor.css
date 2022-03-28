@@ -1,0 +1,18 @@
+﻿
+h2{
+    font-size: 1.2vw;
+    margin: 5%;
+}
+.container{
+    padding: 5%;
+    background-color: white;
+    border-radius:10px;
+}
+.opcion {
+    margin-top:3%;
+    width: 100%;
+}
+#return {
+    font-size: 2vw;
+    color: #000585;
+}

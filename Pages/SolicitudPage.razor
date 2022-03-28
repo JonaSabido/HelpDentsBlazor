@@ -1,0 +1,239 @@
+﻿@page "/Solicitud/Ver/{IdSolicitud:int}"
+
+@using HelpDentsProyecto.Data
+@using HelpDentsProyecto.Data.Models
+@using System.Net.Http
+@using System.Net.Http.Json
+@inject HttpClient http
+@using Microsoft.AspNetCore.Components.Server.ProtectedBrowserStorage
+@using System.Net.Http.Headers
+@using System.Text.Json
+@using System.Text
+@inject ProtectedSessionStorage SessionStorage
+@inject NavigationManager NavigationManager
+
+@if (sesion == false)
+{
+
+}
+else
+{
+    <div class="container">
+        <a href="/Index" id="return"> <span class="oi oi-arrow-circle-left"></span> </a>
+        <div class="row">
+            <div class="col-sm-3">
+                <h2> <b> Id Solicitud: </b></h2>
+                <h2> <b> Tipo: </b></h2>
+                <h2> <b> (Id) Usuario: </b></h2>
+                <h2> <b> Especialidad 1:</b></h2>
+                <h2> <b> Especialidad 2: </b></h2>
+                <h2> <b> Especialidad 3: </b></h2>
+                <h2> <b> Turno 1: </b></h2>
+                <h2> <b> Turno 2: </b></h2>
+                <h2> <b> Turno 3: </b></h2>
+                <h2> <b> Costo: </b></h2>
+                <h2> <b> Telefono: </b></h2>
+                <h2> <b> Descripción: </b></h2>
+                <h2> <b> Facebook: </b></h2>
+                <h2> <b> Instagram: </b></h2>
+                <h2> <b> Linkendin: </b></h2>
+                <h2> <b> Youtube: </b></h2>
+            </div>
+            <div class="col-sm-3">
+                <h2> @Solicitud.IdSolicitud </h2>
+                <h2> @Solicitud.Tipo </h2>
+                <h2> (@Solicitud.UsuarioIdUsuario) @Usuario.Nombres @Usuario.Apellidos</h2>
+                @if (Solicitud.Especialidad1== null)
+                {
+                    <h2> - </h2>
+                }
+                else
+                {
+                    <h2>@Solicitud.Especialidad1</h2>
+                }
+
+                @if (Solicitud.Especialidad2 == null)
+                {
+                    <h2> - </h2>
+                }
+                else
+                {
+                    <h2>@Solicitud.Especialidad2</h2>
+                }
+
+                @if (Solicitud.Especialidad3 == null)
+                {
+                    <h2> - </h2>
+                }
+                else
+                {
+                    <h2>@Solicitud.Especialidad3</h2>
+                }
+
+
+
+                @if (Solicitud.Turno1 == null)
+                {
+                    <h2> - </h2>
+                }
+                else
+                {
+                    <h2>@Solicitud.Turno1</h2>
+                }
+
+                @if (Solicitud.Turno2 == null)
+                {
+                    <h2> - </h2>
+                }
+                else
+                {
+                    <h2>@Solicitud.Turno2</h2>
+                }
+
+                @if (Solicitud.Turno3 == null)
+                {
+                    <h2> - </h2>
+                }
+                else
+                {
+                    <h2>@Solicitud.Turno3</h2>
+                }
+                
+                
+                <h2> @Solicitud.Costo </h2>
+                <h2> @Solicitud.Telefono </h2>
+                <h2> @Solicitud.Descripcion </h2>
+                
+                @if (Solicitud.Facebook == null)
+                {
+                    <h2> - </h2>
+                }
+                else
+                {
+                    <h2>@Solicitud.Facebook</h2>
+                }
+
+                @if (Solicitud.Instagram == null)
+                {
+                    <h2> - </h2>
+                }
+                else
+                {
+                    <h2>@Solicitud.Instagram</h2>
+                }
+
+                @if (Solicitud.Linkendin == null)
+                {
+                    <h2> - </h2>
+                }
+                else
+                {
+                    <h2>@Solicitud.Linkendin</h2>
+                }
+
+                @if (Solicitud.YouTube == null)
+                {
+                    <h2> - </h2>
+                }
+                else
+                {
+                    <h2>@Solicitud.YouTube</h2>
+                }
+                
+            </div>
+        </div>
+        <br>
+        <div class="row">
+            <div class="col-sm-6">
+                <a class="btn btn-success opcion" @onclick="Aceptar"> Aceptar </a>
+            </div>
+            <div class="col-sm-6">
+                <a class="btn btn-danger opcion" @onclick="Rechazar"> Rechazar </a>
+            </div>
+        </div>
+    </div>
+
+}
+
+
+@code {
+    [Parameter]
+    public int idSolicitud { get; set; }
+    private ResponseLogin? user;
+    private bool sesion = false;
+    SolicitudModel Solicitud = new SolicitudModel();
+    UsuarioModel Usuario = new UsuarioModel();
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender)
+        {
+            try
+            {
+
+                var result = await SessionStorage.GetAsync<string>("Token");
+                string Token = result.Success ? result.Value : "";
+
+                if (Token == "")
+                {
+                    NavigationManager.NavigateTo("/Login");
+                }
+
+                var request = new HttpRequestMessage(HttpMethod.Get, $"api/Login/ValidateToken/{Token}");
+                using var httpResponseInitial = await http.SendAsync(request);
+                user = await httpResponseInitial.Content.ReadFromJsonAsync<ResponseLogin>();
+
+
+                if (user == null)
+                {
+                    NavigationManager.NavigateTo("/Login");
+                }
+                else if (user.RolIdRol != 1)
+                {
+                    NavigationManager.NavigateTo("/");
+
+                }
+                else
+                {
+                    sesion = true;
+                    Solicitud = await http.GetFromJsonAsync<SolicitudModel>($"api/Solicitud/{idSolicitud}");
+                    Usuario = await http.GetFromJsonAsync<UsuarioModel>($"api/Usuario/{Solicitud.UsuarioIdUsuario}");
+
+                }
+
+
+                StateHasChanged();
+            }
+            catch (Exception ex)
+            {
+
+            }
+        }
+
+    }
+
+    protected async Task Aceptar()
+    {
+        EstadoModel estado = new EstadoModel();
+        HttpResponseMessage? response;
+        estado.Status = "Aceptada";
+        response = await http.PutAsJsonAsync($"api/Solicitud/{idSolicitud}", estado!);
+        if (response.IsSuccessStatusCode)
+        {
+            NavigationManager.NavigateTo("/Index");
+        }
+    }
+    protected async Task Rechazar()
+    {
+        EstadoModel estado = new EstadoModel();
+        HttpResponseMessage? response;
+        estado.Status = "Rechazada";
+        response = await http.PutAsJsonAsync($"api/Solicitud/{idSolicitud}", estado!);
+        if (response.IsSuccessStatusCode)
+        {
+            NavigationManager.NavigateTo("/Index");
+        }
+    }
+
+
+}

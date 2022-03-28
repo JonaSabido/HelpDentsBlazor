@@ -11,21 +11,64 @@
 @inject ProtectedSessionStorage SessionStorage
 @inject NavigationManager NavigationManager
 
-@if(sesion == false)
+@if (sesion == false)
 {
 
 }
 else
-{    
+{
     <PageTitle>Home</PageTitle>
-    <h1>Bienvenido Administrador</h1>
-    <link rel="stylesheet" href="~/css/index.css" />
+    <div class="container">
+        <div class="header">
+            <h2>Bienvenido Administrador</h2>
+        <h4> Usted ha iniciado sesión como: <i>@user.Correo</i></h4>
+        </div>
+        <br />
+        <br />
+        <br />
+        <h5> Solicitudes Pendientes </h5>
+        @if(SolicitudesPendientes.Count() == 0)
+        {
+            <h3> No hay solicitudes pendientes </h3>
+        }
+        @foreach (var Solicitud in SolicitudesPendientes.Reverse())
+        {
+            Usuario = Usuarios.FirstOrDefault(x => x.Id == Solicitud.UsuarioIdUsuario);
+            <a href="/Solicitud/Ver/@Solicitud.IdSolicitud" class="solicitud">
+                <div class="sol">
+                    <div class="row">
+                        <div class="col-sm-1">
+                            <h4 class="oi oi-clipboard"></h4>
+                        </div>
+                        <div class="col-sm-3">
+                            <h4> <b>No. Solicitud: </b> @Solicitud.IdSolicitud </h4>
+                        </div>
+                        <div class="col-sm-5">
+                            <h4> <b>(Id) Usuario: </b> (@Solicitud.UsuarioIdUsuario) @Usuario.Nombres @Usuario.Apellidos  </h4>
+                        </div>
+                        <div class="col-sm-3">
+                            <h4> <b> Tipo: </b> @Solicitud.Tipo </h4>
+                        </div>
+                    </div>
+                </div>
+            </a>
+
+        }
+    </div>
+
+
 }
 
 
 @code {
     private ResponseLogin? user;
     private bool sesion = false;
+    private readonly string api = "api/Solicitud/all";
+    private readonly string api2 = "api/Usuario/all";
+    private IList<SolicitudModel>? Solicitudes;
+    private IList<UsuarioModel>? Usuarios;
+    private IEnumerable<SolicitudModel>? SolicitudesPendientes;
+    UsuarioModel Usuario = new UsuarioModel();
 
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {
@@ -37,7 +80,7 @@ else
                 var result = await SessionStorage.GetAsync<string>("Token");
                 string Token = result.Success ? result.Value : "";
 
-                if(Token == "")
+                if (Token == "")
                 {
                     NavigationManager.NavigateTo("/Login");
                 }
@@ -47,38 +90,42 @@ else
                 user = await httpResponseInitial.Content.ReadFromJsonAsync<ResponseLogin>();
 
 
-                    if(user == null)
-                    {
-                        NavigationManager.NavigateTo("/Login");
-                    }
-                    else if(user.RolIdRol != 1)
-                    {
-                        NavigationManager.NavigateTo("/");
-                    }
-                    else
-                    {
-                        sesion = true;
-                    }
-                
+                if (user == null)
+                {
+                    NavigationManager.NavigateTo("/Login");
+                }
+                else if (user.RolIdRol != 1)
+                {
+                    NavigationManager.NavigateTo("/");
 
-               /* var request2 = new HttpRequestMessage(HttpMethod.Get, api2);
-                TokenSend tokensend = new TokenSend();
-                tokensend.Token = Token;
-                request2.Headers.Add("Authorization", Token);
-                request2.Content = new StringContent(JsonSerializer.Serialize(tokensend), Encoding.UTF8, "application/json");;
-                using var httpResponse = await http.SendAsync(request2);
-                UsuarioFor = await httpResponse.Content.ReadFromJsonAsync<IList<UsuarioModel>>(); */
+                }
+                else
+                {
+                    sesion = true;
+                    Solicitudes = await http.GetFromJsonAsync<IList<SolicitudModel>>(api);
+                    SolicitudesPendientes = Solicitudes.Where(x => x.Estado == "Pendiente");
+                    Usuarios = await http.GetFromJsonAsync<IList<UsuarioModel>>(api2);
+                }
+
+
+                /* var request2 = new HttpRequestMessage(HttpMethod.Get, api2);
+                 TokenSend tokensend = new TokenSend();
+                 tokensend.Token = Token;
+                 request2.Headers.Add("Authorization", Token);
+                 request2.Content = new StringContent(JsonSerializer.Serialize(tokensend), Encoding.UTF8, "application/json");;
+                 using var httpResponse = await http.SendAsync(request2);
+                 UsuarioFor = await httpResponse.Content.ReadFromJsonAsync<IList<UsuarioModel>>(); */
                 StateHasChanged();
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
-               
+
             }
         }
-        
+
     }
 
-   
+
 }
 
 
