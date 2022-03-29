@@ -1,0 +1,184 @@
+﻿@page "/Solicitud"
+@using HelpDentsProyecto.Data
+@using HelpDentsProyecto.Data.Models
+@using System.Net.Http
+@using System.Net.Http.Json
+@inject HttpClient http
+@using Microsoft.AspNetCore.Components.Server.ProtectedBrowserStorage
+@using System.Net.Http.Headers
+@using System.Text.Json
+@using System.Text
+@inject ProtectedSessionStorage SessionStorage
+@inject NavigationManager NavigationManager
+
+@if (sesion == false)
+{
+
+}
+else
+{
+    <PageTitle>Home</PageTitle>
+    <div class="container">
+        <br>
+        <h5 class="pendiente"> Solicitudes Pendientes </h5>
+        @if(SolicitudesPendientes.Count() == 0)
+        {
+            <h3> No hay solicitudes pendientes </h3>
+        }
+        @foreach (var Solicitud in SolicitudesPendientes.Reverse())
+        {
+            Usuario = Usuarios.FirstOrDefault(x => x.Id == Solicitud.UsuarioIdUsuario);
+            <a href="/Solicitud/@Solicitud.IdSolicitud" class="solicitud ">
+                <div class="sol ">
+                    <div class="row">
+                        <div class="col-sm-1">
+                            <h4 class="oi oi-clipboard"></h4>
+                        </div>
+                        <div class="col-sm-3">
+                            <h4> <b>No. Solicitud: </b> @Solicitud.IdSolicitud </h4>
+                        </div>
+                        <div class="col-sm-5">
+                            <h4> <b>(Id) Usuario: </b> (@Solicitud.UsuarioIdUsuario) @Usuario.Nombres @Usuario.Apellidos  </h4>
+                        </div>
+                        <div class="col-sm-3">
+                            <h4> <b> Tipo: </b> @Solicitud.Tipo </h4>
+                        </div>
+                    </div>
+                </div>
+            </a>
+
+        }
+
+
+
+        <br>
+        <h5 class="aceptada"> Solicitudes Aceptadas </h5>
+        @if(SolicitudesAceptadas.Count() == 0)
+        {
+            <h3> No hay solicitudes aceptadas </h3>
+        }
+        @foreach (var Solicitud in SolicitudesAceptadas.Reverse())
+        {
+            Usuario = Usuarios.FirstOrDefault(x => x.Id == Solicitud.UsuarioIdUsuario);
+            <a href="/Solicitud/@Solicitud.IdSolicitud" class="solicitud ">
+                <div class="sol ">
+                    <div class="row">
+                        <div class="col-sm-1">
+                            <h4 class="oi oi-clipboard"></h4>
+                        </div>
+                        <div class="col-sm-3">
+                            <h4> <b>No. Solicitud: </b> @Solicitud.IdSolicitud </h4>
+                        </div>
+                        <div class="col-sm-5">
+                            <h4> <b>(Id) Usuario: </b> (@Solicitud.UsuarioIdUsuario) @Usuario.Nombres @Usuario.Apellidos  </h4>
+                        </div>
+                        <div class="col-sm-3">
+                            <h4> <b> Tipo: </b> @Solicitud.Tipo </h4>
+                        </div>
+                    </div>
+                </div>
+            </a>
+
+        }
+
+
+        <br>
+        <h5 class="rechazada"> Solicitudes Rechazadas </h5>
+        @if(SolicitudesRechazadas.Count() == 0)
+        {
+            <h3> No hay solicitudes rechazadas </h3>
+        }
+        @foreach (var Solicitud in SolicitudesRechazadas.Reverse())
+        {
+            Usuario = Usuarios.FirstOrDefault(x => x.Id == Solicitud.UsuarioIdUsuario);
+            <a href="/Solicitud/@Solicitud.IdSolicitud" class="solicitud">
+                <div class="sol ">
+                    <div class="row">
+                        <div class="col-sm-1">
+                            <h4 class="oi oi-clipboard"></h4>
+                        </div>
+                        <div class="col-sm-3">
+                            <h4> <b>No. Solicitud: </b> @Solicitud.IdSolicitud </h4>
+                        </div>
+                        <div class="col-sm-5">
+                            <h4> <b>(Id) Usuario: </b> (@Solicitud.UsuarioIdUsuario) @Usuario.Nombres @Usuario.Apellidos  </h4>
+                        </div>
+                        <div class="col-sm-3">
+                            <h4> <b> Tipo: </b> @Solicitud.Tipo </h4>
+                        </div>
+                    </div>
+                </div>
+            </a>
+
+        }
+    </div>
+
+
+}
+
+
+@code {
+    private ResponseLogin? user;
+    private bool sesion = false;
+    private readonly string api = "api/Solicitud/all";
+    private readonly string api2 = "api/Usuario/all";
+    private IList<SolicitudModel>? Solicitudes;
+    private IList<UsuarioModel>? Usuarios;
+    private IEnumerable<SolicitudModel>? SolicitudesPendientes;
+    private IEnumerable<SolicitudModel>? SolicitudesAceptadas;
+    private IEnumerable<SolicitudModel>? SolicitudesRechazadas;
+    UsuarioModel Usuario = new UsuarioModel();
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender)
+        {
+            try
+            {
+
+                var result = await SessionStorage.GetAsync<string>("Token");
+                string Token = result.Success ? result.Value : "";
+
+                if (Token == "")
+                {
+                    NavigationManager.NavigateTo("/Login");
+                }
+
+                var request = new HttpRequestMessage(HttpMethod.Get, $"api/Login/ValidateToken/{Token}");
+                using var httpResponseInitial = await http.SendAsync(request);
+                user = await httpResponseInitial.Content.ReadFromJsonAsync<ResponseLogin>();
+
+
+                if (user == null)
+                {
+                    NavigationManager.NavigateTo("/Login");
+                }
+                else if (user.RolIdRol != 1)
+                {
+                    NavigationManager.NavigateTo("/");
+
+                }
+                else
+                {
+                    sesion = true;
+                    Solicitudes = await http.GetFromJsonAsync<IList<SolicitudModel>>(api);
+                    SolicitudesPendientes = Solicitudes.Where(x => x.Estado == "Pendiente");
+                    SolicitudesAceptadas = Solicitudes.Where(x => x.Estado == "Aceptada");
+                    SolicitudesRechazadas = Solicitudes.Where(x => x.Estado == "Rechazada");
+                    Usuarios = await http.GetFromJsonAsync<IList<UsuarioModel>>(api2);
+                }
+
+                StateHasChanged();
+            }
+            catch (Exception ex)
+            {
+
+            }
+        }
+
+    }
+
+
+}
+
+

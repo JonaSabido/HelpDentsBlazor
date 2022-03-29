@@ -18,12 +18,11 @@ h3{
     border-radius: 10px;
     margin-top: 1%;
     width: 100%;
+    border: 1px white solid;
 }
-.sol:hover{
-    background-color: #ff0000;
-    color: white;
-
-}
+    .sol:hover {
+        border: 1px #ff0000 solid;
+    }
 .oi-clipboard{
     font-size: 1.3vw;
     color: #000585;

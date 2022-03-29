@@ -7,35 +7,61 @@
 @using HelpDentsProyecto.Data
 
 <nav id="nav" class="navbar">
-  <div>
-      <a href="/" id="logo">  
-        <img src="/images/logo.png" id="img-logo"/>
-        
-      </a>
-  </div>
-    
-       <div class="input-wrapper">
-      <input type="search" placeholder="Buscar" id="inputSearch" @bind-value="@user.Nombres"/>
-      <a href="#" @onclick="Send"> 
-        <svg xmlns="http://www.w3.org/2000/svg" class="input-icon" viewBox="0 0 20 20" fill="currentColor" id="btnSearch">
-            <path fill-rule="evenodd" d="M8 4a4 4 0 100 8 4 4 0 000-8zM2 8a6 6 0 1110.89 3.476l4.817 4.817a1 1 0 01-1.414 1.414l-4.816-4.816A6 6 0 012 8z" clip-rule="evenodd" />
-        </svg>
-      </a>
-      </div> 
-   
-  <div>
-      @if(id == 0)
+    <div>
+        <a href="/" id="logo">
+
+            <img src="/images/logo.png" id="img-logo" />
+
+        </a>
+    </div>
+
+    <div class="input-wrapper">
+        <input type="search" placeholder="Buscar" id="inputSearch" @bind-value="@user.Nombres" />
+        <a href="#" @onclick="Send">
+            <svg xmlns="http://www.w3.org/2000/svg" class="input-icon" viewBox="0 0 20 20" fill="currentColor" id="btnSearch">
+                <path fill-rule="evenodd" d="M8 4a4 4 0 100 8 4 4 0 000-8zM2 8a6 6 0 1110.89 3.476l4.817 4.817a1 1 0 01-1.414 1.414l-4.816-4.816A6 6 0 012 8z" clip-rule="evenodd" />
+            </svg>
+        </a>
+    </div>
+
+    <div>
+        @if (id == 0)
         {
             <a href="/Registro" id="botonRegistro"> Registrarse </a>
             <a href="/Login" id="botonLogin"> Iniciar Sesión </a>
-         }
+        }
         else
         {
-           <a @onclick="LogOut" id="botonLogin" href="/"> Cerrar Sesión </a> 
+            if (rol != 0)
+            {
+                if (rol == 1)
+                {
+                    <a href="/Index">
+                        <i class="oi oi-home"></i>
+                    </a>
+                }
+
+                if (rol == 2)
+                {
+                    <a href="/Principal">
+                        <i class="oi oi-home"></i>
+                    </a>
+                }
+                if (rol == 3)
+                {
+                    <a href="/Principal">
+                        <i class="oi oi-home"></i>
+                    </a>
+                }
+
+            }
+
+            <a @onclick="LogOut" id="botonLogin" href="/"> Cerrar Sesión </a>
         }
 
-      
-  </div>
+
+
+    </div>
 
 </nav>
 
@@ -43,9 +69,10 @@
 
 @Body
 
-@code{
+@code {
     UsuarioModel user = new UsuarioModel();
     int id;
+    int rol = 0;
 
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {
@@ -55,9 +82,12 @@
             {
                 var result = await SessionStorage.GetAsync<int>("Id");
                 id = result.Success ? result.Value : 0;
+
+                var result2 = await SessionStorage.GetAsync<int>("Rol");
+                rol = result2.Success ? result2.Value : 0;
                 StateHasChanged();
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 id = 0;
             }

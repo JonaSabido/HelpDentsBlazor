@@ -20,9 +20,9 @@
             <EditForm Model = "@login">
                 <form @onsubmit="Request">
                 <label> Correo Electronico: </label>
-                <input type="text"  @bind-value="@login.Correo">
+                <input type="text"  @bind-value="@login.Correo" required>
                 <label> Contraseña: </label>
-                <input type="password" @bind-value="@login.Contraseña">
+                <input type="password" @bind-value="@login.Contraseña" required>
                 @if(requestfail == true)
             {
                 <h1 id="alert-fail"> CREDENCIALES INCORRECTAS </h1>

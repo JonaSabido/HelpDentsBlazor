@@ -107,14 +107,6 @@ else
                     Usuarios = await http.GetFromJsonAsync<IList<UsuarioModel>>(api2);
                 }
 
-
-                /* var request2 = new HttpRequestMessage(HttpMethod.Get, api2);
-                 TokenSend tokensend = new TokenSend();
-                 tokensend.Token = Token;
-                 request2.Headers.Add("Authorization", Token);
-                 request2.Content = new StringContent(JsonSerializer.Serialize(tokensend), Encoding.UTF8, "application/json");;
-                 using var httpResponse = await http.SendAsync(request2);
-                 UsuarioFor = await httpResponse.Content.ReadFromJsonAsync<IList<UsuarioModel>>(); */
                 StateHasChanged();
             }
             catch (Exception ex)
