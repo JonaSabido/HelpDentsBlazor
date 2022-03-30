@@ -152,6 +152,9 @@ else
                 <div class="col-sm-6">
                     <a class="btn btn-danger opcion" @onclick="Rechazar"> Rechazar </a>
                 </div>
+                <div class="col-sm-12">
+                    <a class="btn btn-danger opcion" @onclick="@(e=>Eliminar(e, @Solicitud.IdSolicitud))"> Eliminar Solicitud </a>
+                </div>
             }
 
             @if (Solicitud.Estado == "Rechazada")
@@ -161,6 +164,9 @@ else
                 </div>
                 <div class="col-sm-6">
                     <a class="btn btn-success opcion" @onclick="Aceptar"> Aceptar </a>
+                </div>
+                <div class="col-sm-12">
+                    <a class="btn btn-danger opcion" @onclick="@(e=>Eliminar(e, @Solicitud.IdSolicitud))"> Eliminar Solicitud </a>
                 </div>
             }
 
@@ -172,6 +178,7 @@ else
                 <div class="col-sm-6">
                     <a class="btn btn-danger opcion" @onclick="Rechazar"> Rechazar </a>
                 </div>
+                
             }
 
         </div>
@@ -244,7 +251,7 @@ else
         response = await http.PutAsJsonAsync($"api/Solicitud/{idSolicitud}", estado!);
         if (response.IsSuccessStatusCode)
         {
-            NavigationManager.NavigateTo("/Index");
+            NavigationManager.NavigateTo("/Solicitud");
         }
     }
     protected async Task Rechazar()
@@ -255,7 +262,7 @@ else
         response = await http.PutAsJsonAsync($"api/Solicitud/{idSolicitud}", estado!);
         if (response.IsSuccessStatusCode)
         {
-            NavigationManager.NavigateTo("/Index");
+            NavigationManager.NavigateTo("/Solicitud");
         }
     }
 
@@ -267,8 +274,13 @@ else
         response = await http.PutAsJsonAsync($"api/Solicitud/{idSolicitud}", estado!);
         if (response.IsSuccessStatusCode)
         {
-            NavigationManager.NavigateTo("/Index");
+            NavigationManager.NavigateTo("/Solicitud");
         }
+    }
+    protected async Task Eliminar(MouseEventArgs e, int? id)
+    {
+        var response = await http.DeleteAsync($"api/Solicitud/{@id}");
+        NavigationManager.NavigateTo("/Solicitud");
     }
 
 

@@ -19,14 +19,12 @@
 
 input {
     margin: 2%;
-    background-color: #DFDFDF;
 }
 
     input:focus {
         outline: none;
         border: 1px red solid;
-        box-shadow: 2px 2px 5px 2px rgba(255,18,58, 0.1);
-        background-color: #DFDFDF;
+        box-shadow: 1px 1px 1px 1px rgba(255,18,58, 0.1);
     }
 button, a {
     margin-top: 5%;
@@ -34,7 +32,8 @@ button, a {
 #btn-edit {
     background-color: #000585;
     color: white;
-    padding: 1%;
+    padding: 1.2%;
+    text-decoration: none;
     border: none;
     border-radius: 5px;
     border: 1px #000585 solid;

@@ -1,49 +1,166 @@
 ﻿@page "/MiPerfil"
 @layout NavHelpDents
+@using Microsoft.AspNetCore.Components.Server.ProtectedBrowserStorage
+@inject ProtectedSessionStorage SessionStorage
+@inject NavigationManager NavigationManager
+@using HelpDentsProyecto.Data
+@using HelpDentsProyecto.Data.Models
+@using System.Net.Http
+@using System.Net.Http.Json
+@using System.Text.Json
+@using System.Text
+@inject HttpClient http
 
-<div class="container">
-    <div id="sd">
-        
+@if (sesion == false)
+{
+
+}
+else
+{
+    <div class="container">
+        <div id="sd">
+
             <div class="row">
                 <div class="col-sm-2">
-                <span class="oi oi-person" id="icon-user" />
+                    <span class="oi oi-person" id="icon-user" />
+                </div>
+                <div class="col-sm-10">
+                    <h1 id="nameUser"> @usuarioNew.Nombres @usuarioNew.Apellidos </h1>
+                </div>
             </div>
-            <div class="col-sm-10">
-                <h1 id="nameUser"> Nombre de usuario </h1>
-            </div>
-            </div>
 
 
 
-            <form class="container">
-                <div class="mb-2">
-                    <label class="form-label" for="Nombre" > Nombres </label>
-                    <input type="text" class="form-control"  id="name" required>
-                </div>
+            <EditForm Model="usuario">
+                <form class="container" @onsubmit="Save">
+                    <div class="mb-2">
+                        <label class="form-label" for="Nombre"> Nombres </label>
+                        <input type="text" class="form-control" id="name" required @bind="@usuario.Nombres">
+                    </div>
 
-                <div class="mb-2">
-                    <label class="form-label" for="name">Apellidos</label>
-                    <input type="text" class="form-control"  id="apellido" required>
-                </div>
+                    <div class="mb-2">
+                        <label class="form-label" for="name">Apellidos</label>
+                        <input type="text" class="form-control" id="apellido" required @bind="@usuario.Apellidos">
+                    </div>
 
-                <div class="mb-2">
-                    <label class="form-label" for="name">Correo</label>
-                    <input type="email" class="form-control"  id="correo" required>
-                </div>
+                    <div class="mb-2">
+                        <label class="form-label" for="name">Correo</label>
+                        <input type="email" class="form-control" id="correo" required @bind="@usuario.Correo">
+                        @if (alert == true)
+                        {
+                            <div class="alert alert-danger"> Ya existe un usuario con este correo</div>
+                        }
+                    </div>
 
-                <div class="mb-2">
-                    <label class="form-label" for="name">Contraseña</label>
-                    <input type="password" class="form-control"  id="contraseña" required>
-                </div>
+                    <div class="mb-2">
+                        <label class="form-label" for="name">Contraseña</label>
+                        <input type="password" class="form-control" id="contraseña" required @bind="@usuario.Contraseña">
+                    </div>
 
-                <button type="submit" id="btn-save">Guardar </button>
-                <button id="btn-edit">Editar </button>
+                    <button type="submit" id="btn-save">Guardar </button>
+                    <a id="btn-edit" href="/Principal">Regresar </a>
 
-            </form>
+                </form>
+            </EditForm>
 
+        </div>
     </div>
-</div>
+}
+
 
 @code {
+    private ResponseLogin? user;
+    private bool sesion = false;
+    UsuarioModel usuario = new UsuarioModel();
+    UsuarioModel usuarioNew = new UsuarioModel();
+    bool alert = false;
 
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender)
+        {
+            try
+            {
+
+                var result = await SessionStorage.GetAsync<string>("Token");
+                string Token = result.Success ? result.Value : "";
+
+                if (Token == "")
+                {
+                    NavigationManager.NavigateTo("/Login");
+                }
+
+                var request = new HttpRequestMessage(HttpMethod.Get, $"api/Login/ValidateToken/{Token}");
+                using var httpResponseInitial = await http.SendAsync(request);
+                user = await httpResponseInitial.Content.ReadFromJsonAsync<ResponseLogin>();
+
+
+                if (user == null)
+                {
+                    NavigationManager.NavigateTo("/Login");
+                }
+                else
+                {
+                    sesion = true;
+                    int idUser = await ReadId();
+                    usuarioNew = await http.GetFromJsonAsync<UsuarioModel>($"api/Usuario/{idUser}");
+                    usuario = await http.GetFromJsonAsync<UsuarioModel>($"api/Usuario/{idUser}");
+
+
+
+                }
+
+
+                StateHasChanged();
+
+            }
+            catch (Exception ex)
+            {
+
+            }
+        }
+
+    }
+
+    public async Task<int> ReadId()
+    {
+        var result = await SessionStorage.GetAsync<int>("Id");
+        return result.Success ? result.Value : 0;
+    }
+    protected async Task Save()
+    {
+        int idUser = await ReadId();
+        HttpResponseMessage? response;
+
+        response = await http.PutAsJsonAsync<UsuarioModel>($"api/usuario/{idUser}", usuario!);
+        if (!response.IsSuccessStatusCode)
+        {
+            alert = true;
+        }
+        else
+        {
+            ResponseLogin logResponse = new ResponseLogin();
+            RequestLogin login = new RequestLogin();
+            login.Correo = usuario.Correo;
+            login.Contraseña = usuario.Contraseña;
+
+            var request = new HttpRequestMessage(HttpMethod.Post, "https://localhost:5001/api/login");
+            request.Content = new StringContent(JsonSerializer.Serialize(login), Encoding.UTF8, "application/json");
+
+            using var httpResponse = await http.SendAsync(request);
+
+            logResponse = await httpResponse.Content.ReadFromJsonAsync<ResponseLogin>();
+
+            if (httpResponse.IsSuccessStatusCode)
+            {
+                await SessionStorage.SetAsync("Id", @logResponse.id);
+                await SessionStorage.SetAsync("Token", @logResponse.Token);
+                await SessionStorage.SetAsync("Rol", @logResponse.RolIdRol);
+                await SessionStorage.SetAsync("Correo", @logResponse.Correo);
+                NavigationManager.NavigateTo("/Principal");
+            }
+        }
+
+
+    }
 }

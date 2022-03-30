@@ -13,108 +13,116 @@
 @inject ProtectedSessionStorage SessionStorage
 @inject NavigationManager NavigationManager
 
-<div class="container">
-    <div id="sd">
-        @if (alert == false)
-        {
-            @if (isUpdate == false)
+@if (sesion == false)
+{
+
+}
+else
+{
+    <div class="container">
+        <div id="sd">
+            @if (alert == false)
             {
-                <h3> <b>Solicitud registro de asesor</b> </h3>
+                @if (isUpdate == false)
+                {
+                    <h3> <b>Solicitud registro de asesor</b> </h3>
+                }
+                else
+                {
+                    <h3> <b>Solicitud actualizar informacion de asesor</b> </h3>
+                }
+
+                <EditForm Model="solicitud">
+                    <form class="container" @onsubmit="Save">
+
+
+                        <div class="mb-2">
+                            <label class="form-label" for="name">Especialidades (1 Mínimo)</label>
+                            <br />
+                            <input type="text" class="form-control" name="example" list="listEsp" placeholder="Especialidad 1" @bind-value="@solicitud.Especialidad1" required />
+                            <datalist id="listEsp">
+                                @if (EspecialidadFor == null)
+                                {
+                                    <option> </option>
+                                }
+                                else
+                                {
+                                    foreach (var RecorridoEspecial in EspecialidadFor)
+                                    {
+                                        <option> @RecorridoEspecial.Nombre </option>
+                                    }
+                                }
+                            </datalist>
+
+
+                            <input type="text" class="form-control" name="example" list="listEsp" placeholder="Especialidad 2 " @bind-value="@solicitud.Especialidad2">
+
+
+                            <input type="text" class="form-control" name="example" list="listEsp" placeholder="Especialidad 3" @bind-value="@solicitud.Especialidad3">
+
+                        </div>
+
+                        <div class="mb-2">
+                            <label class="form-label" for="name">Turnos (1 Mínimo)</label>
+                            <br />
+                            <select class="form-control" @bind="@solicitud.Turno1" required>
+                                <option value="" selected> </option>
+                                <option value="Matutino"> Matutino </option>
+                                <option value="Vespertino"> Vespertino </option>
+                                <option value="Nocturno"> Nocturno </option>
+                            </select>
+
+                            <select class="form-control" @bind="@solicitud.Turno2">
+                                <option value="" selected> </option>
+                                <option value="Matutino"> Matutino </option>
+                                <option value="Vespertino"> Vespertino </option>
+                                <option value="Nocturno"> Nocturno </option>
+                            </select>
+
+                            <select class="form-control" @bind="@solicitud.Turno3">
+                                <option value="" selected> </option>
+                                <option value="Matutino"> Matutino </option>
+                                <option value="Vespertino"> Vespertino </option>
+                                <option value="Nocturno"> Nocturno </option>
+                            </select>
+                        </div>
+
+                        <div class="mb-2">
+                            <label class="form-label" for="name"> Costo</label>
+                            <input type="number" step="any" class="form-control" id="Costo" placeholder="$" required @bind-value="@solicitud.Costo" />
+                        </div>
+                        <div class="mb-2">
+                            <label class="form-label" for="name">Telefono</label>
+                            <input type="text" class="form-control" id="Telefono" required @bind-value="@solicitud.Telefono" />
+                        </div>
+
+                        <div class="mb-2">
+                            <label class="form-label" for="name"> Redes Sociales (URL) </label>
+                            <input type="text" class="form-control" id="fb" placeholder="Facebook" @bind-value="@solicitud.Facebook" />
+                            <input type="text" class="form-control" id="ig" placeholder="Instagram" @bind-value="@solicitud.Instagram" />
+                            <input type="text" class="form-control" id="lk" placeholder="Linkendin" @bind-value="@solicitud.Linkendin" />
+                            <input type="text" class="form-control" id="yt" placeholder="Youtube" @bind-value="@solicitud.YouTube" />
+                        </div>
+                        <div class="mb-2">
+                            <label class="form-label">Descripcion</label>
+                            <input type="text" class="form-control" id="desc" required @bind-value="@solicitud.Descripcion" />
+                        </div>
+
+                        <button type="submit" class="btn btn-primary">Enviar </button>
+                        <a class="btn btn-danger" href="/Principal">Cancelar</a>
+
+                    </form>
+                </EditForm>
             }
             else
             {
-                <h3> <b>Solicitud actualizar informacion de asesor</b> </h3>
+                <div class="alert alert-success"> ¡Tu solicitud ha sido enviada con éxito y está siendo revisada por uno de nuestros administradores!</div>
             }
 
-            <EditForm Model="solicitud">
-                <form class="container" @onsubmit="Save">
-
-
-                    <div class="mb-2">
-                        <label class="form-label" for="name">Especialidades (1 Mínimo)</label>
-                        <br />
-                        <input type="text" class="form-control" name="example" list="listEsp" placeholder="Especialidad 1" @bind-value="@solicitud.Especialidad1" required />
-                        <datalist id="listEsp">
-                            @if (EspecialidadFor == null)
-                            {
-                                <option> </option>
-                            }
-                            else
-                            {
-                                foreach (var RecorridoEspecial in EspecialidadFor)
-                                {
-                                    <option> @RecorridoEspecial.Nombre </option>
-                                }
-                            }
-                        </datalist>
-
-
-                        <input type="text" class="form-control" name="example" list="listEsp" placeholder="Especialidad 2 " @bind-value="@solicitud.Especialidad2">
-
-
-                        <input type="text" class="form-control" name="example" list="listEsp" placeholder="Especialidad 3" @bind-value="@solicitud.Especialidad3">
-
-                    </div>
-
-                    <div class="mb-2">
-                        <label class="form-label" for="name">Turnos (1 Mínimo)</label>
-                        <br />
-                        <select class="form-control" @bind="@solicitud.Turno1" required>
-                            <option value="" selected> </option>
-                            <option value="Matutino"> Matutino </option>
-                            <option value="Vespertino"> Vespertino </option>
-                            <option value="Nocturno"> Nocturno </option>
-                        </select>
-
-                        <select class="form-control" @bind="@solicitud.Turno2">
-                            <option value="" selected> </option>
-                            <option value="Matutino"> Matutino </option>
-                            <option value="Vespertino"> Vespertino </option>
-                            <option value="Nocturno"> Nocturno </option>
-                        </select>
-
-                        <select class="form-control" @bind="@solicitud.Turno3">
-                            <option value="" selected> </option>
-                            <option value="Matutino"> Matutino </option>
-                            <option value="Vespertino"> Vespertino </option>
-                            <option value="Nocturno"> Nocturno </option>
-                        </select>
-                    </div>
-
-                    <div class="mb-2">
-                        <label class="form-label" for="name"> Costo</label>
-                        <input type="number" step="any" class="form-control" id="Costo" placeholder="$" required @bind-value="@solicitud.Costo" />
-                    </div>
-                    <div class="mb-2">
-                        <label class="form-label" for="name">Telefono</label>
-                        <input type="text" class="form-control" id="Telefono" required @bind-value="@solicitud.Telefono" />
-                    </div>
-
-                    <div class="mb-2">
-                        <label class="form-label" for="name"> Redes Sociales (URL) </label>
-                        <input type="text" class="form-control" id="fb" placeholder="Facebook" @bind-value="@solicitud.Facebook" />
-                        <input type="text" class="form-control" id="ig" placeholder="Instagram" @bind-value="@solicitud.Instagram" />
-                        <input type="text" class="form-control" id="lk" placeholder="Linkendin" @bind-value="@solicitud.Linkendin" />
-                        <input type="text" class="form-control" id="yt" placeholder="Youtube" @bind-value="@solicitud.YouTube" />
-                    </div>
-                    <div class="mb-2">
-                        <label class="form-label">Descripcion</label>
-                        <input type="text" class="form-control" id="desc" required @bind-value="@solicitud.Descripcion" />
-                    </div>
-
-                    <button type="submit" class="btn btn-primary">Enviar </button>
-                    <a class="btn btn-danger" href="/Principal">Cancelar</a>
-
-                </form>
-            </EditForm>
-        }
-        else
-        {
-            <div class="alert alert-success"> ¡Tu solicitud ha sido enviada con éxito y está siendo revisada por uno de nuestros administradores!</div>
-        }
-
+        </div>
     </div>
-</div>
+}
+
 
 @code {
     [Parameter]
@@ -137,103 +145,175 @@
     SolicitudModel solicitud = new SolicitudModel();
     AsesorModel asesor = new AsesorModel();
     bool alert = false;
+    private ResponseLogin? user;
+    private bool sesion = false;
 
-
-    protected override async Task OnInitializedAsync()
+    protected override async Task OnAfterRenderAsync(bool firstRender)
     {
-        var result = await SessionStorage.GetAsync<int>("Id");
-        int idUsuario = result.Success ? result.Value : 0;
-
-        SolicitudFor = await http.GetFromJsonAsync<IList<SolicitudModel>>(api6);
-        solicitudesUsuario = SolicitudFor.Where(x => x.UsuarioIdUsuario == idUsuario);
-
-        foreach (var Solicitud in solicitudesUsuario)
+        if (firstRender)
         {
-            if (Solicitud.Estado == "Pendiente")
+            try
             {
-                alert = true;
-                break;
+
+                var result = await SessionStorage.GetAsync<string>("Token");
+                string Token = result.Success ? result.Value : "";
+
+                if (Token == "")
+                {
+                    NavigationManager.NavigateTo("/Login");
+                }
+
+                var request = new HttpRequestMessage(HttpMethod.Get, $"api/Login/ValidateToken/{Token}");
+                using var httpResponseInitial = await http.SendAsync(request);
+                user = await httpResponseInitial.Content.ReadFromJsonAsync<ResponseLogin>();
+
+
+                if (user == null)
+                {
+                    NavigationManager.NavigateTo("/Login");
+                }
+                else
+                {
+                    sesion = true;
+                    var resultSesion = await SessionStorage.GetAsync<int>("Id");
+                    int idUsuario = resultSesion.Success ? resultSesion.Value : 0;
+
+                    SolicitudFor = await http.GetFromJsonAsync<IList<SolicitudModel>>(api6);
+                    solicitudesUsuario = SolicitudFor.Where(x => x.UsuarioIdUsuario == idUsuario);
+
+                    foreach (var Solicitud in solicitudesUsuario)
+                    {
+                        if (Solicitud.Estado == "Pendiente")
+                        {
+                            alert = true;
+                            break;
+                        }
+                    }
+
+
+                    isUpdate = id != 0;
+                    if (isUpdate)
+                    {
+                        var AsesorFor = await http.GetFromJsonAsync<IList<AsesorModel>>(api3);
+                        int idUser = await ReadId();
+                        AsesorModel asesor = new AsesorModel();
+                        try
+                        {
+                            asesor = AsesorFor.FirstOrDefault(x => x.UsuarioIdUsuario == id);
+
+                        }
+                        catch
+                        {
+                            asesor = null;
+                        }
+
+                        if (asesor != null)
+                        {
+                            if (asesor.UsuarioIdUsuario == idUser)
+                            {
+                                EspecialidadFor = await http.GetFromJsonAsync<IList<EspecialidadModel>>(api);
+                                TurnoFor = await http.GetFromJsonAsync<IList<TurnoModel>>(api2);
+
+                                asesor = AsesorFor.FirstOrDefault(x => x.UsuarioIdUsuario == id);
+                                var AsesorEspecialidadFor = await http.GetFromJsonAsync<IList<AsesorHasEspecialidadModel>>(api4);
+                                especialidadesAsesor = AsesorEspecialidadFor.Where(x => x.Asesor_idAsesor == asesor.Id);
+                                var AsesorTurnoFor = await http.GetFromJsonAsync<IList<AsesorHasTurnoModel>>(api5);
+                                turnosAsesor = AsesorTurnoFor.Where(x => x.Asesor_idAsesor == asesor.Id);
+
+
+                                string? Esp1 = null;
+                                string? Esp2 = null;
+                                string? Esp3 = null;
+                                string? Turno1 = null;
+                                string? Turno2 = null;
+                                string? Turno3 = null;
+
+                                foreach (var ea in especialidadesAsesor)
+                                {
+                                    if (Esp1 == null)
+                                    {
+                                        var Especialidad = EspecialidadFor.FirstOrDefault(x => x.Id == ea.Especialidad_idEspecialidad);
+                                        Esp1 = Especialidad.Nombre;
+                                        
+                                    }
+                                    else if (Esp2 == null && Esp1 != null)
+                                    {
+                                        var Especialidad = EspecialidadFor.FirstOrDefault(x => x.Id == ea.Especialidad_idEspecialidad);
+                                        Esp2 = Especialidad.Nombre;
+                                    }
+                                    else if (Esp3 == null && Esp1 != null && Esp2 != null)
+                                    {
+                                        var Especialidad = EspecialidadFor.FirstOrDefault(x => x.Id == ea.Especialidad_idEspecialidad);
+                                        Esp3 = Especialidad.Nombre;
+                                    }
+                                }
+
+                                foreach (var ta in turnosAsesor)
+                                {
+                                    if (Turno1 == null)
+                                    {
+                                        var Turno = TurnoFor.FirstOrDefault(x => x.Id == ta.Turno_idTurno);
+                                        Turno1 = Turno.Nombre;
+                                        
+                                    }
+                                    else if (Turno2 == null && Turno1 != null)
+                                    {
+                                        var Turno = TurnoFor.FirstOrDefault(x => x.Id == ta.Turno_idTurno);
+                                        Turno2 = Turno.Nombre;
+                                    }
+                                    else if (Turno3 == null && Turno1 != null && Turno2 != null)
+                                    {
+                                        var Turno = TurnoFor.FirstOrDefault(x => x.Id == ta.Turno_idTurno);
+                                        Turno3 = Turno.Nombre;
+                                    }
+                                }
+
+                                solicitud.Especialidad1 = Esp1;
+                                solicitud.Especialidad2 = Esp2;
+                                solicitud.Especialidad3 = Esp3;
+                                solicitud.Turno1 = Turno1;
+                                solicitud.Turno2 = Turno2;
+                                solicitud.Turno3 = Turno3;
+                                solicitud.Costo = asesor.Costo;
+                                solicitud.Descripcion = asesor.Descripcion;
+                                solicitud.Telefono = asesor.Telefono;
+                                solicitud.Facebook = asesor.Facebook;
+                                solicitud.Instagram = asesor.Instagram;
+                                solicitud.Linkendin = asesor.Linkendin;
+                                solicitud.YouTube = asesor.Youtube;
+                            }
+                            else
+                            {
+                                NavigationManager.NavigateTo("/");
+                            }
+
+
+                        }
+                        else
+                        {
+                            NavigationManager.NavigateTo("/");
+                        }
+                        EspecialidadFor = await http.GetFromJsonAsync<IList<EspecialidadModel>>(api);
+                        TurnoFor = await http.GetFromJsonAsync<IList<TurnoModel>>(api2);
+
+                    }
+
+
+
+
+
+                }
+
+
+                StateHasChanged();
+
+            }
+            catch (Exception ex)
+            {
+
             }
         }
 
-
-        isUpdate = id != 0;
-        if (isUpdate)
-        {
-            EspecialidadFor = await http.GetFromJsonAsync<IList<EspecialidadModel>>(api);
-            TurnoFor = await http.GetFromJsonAsync<IList<TurnoModel>>(api2);
-            var AsesorFor = await http.GetFromJsonAsync<IList<AsesorModel>>(api3);
-            asesor = AsesorFor.FirstOrDefault(x => x.UsuarioIdUsuario == id);
-            var AsesorEspecialidadFor = await http.GetFromJsonAsync<IList<AsesorHasEspecialidadModel>>(api4);
-            especialidadesAsesor = AsesorEspecialidadFor.Where(x => x.Asesor_idAsesor == asesor.Id);
-            var AsesorTurnoFor = await http.GetFromJsonAsync<IList<AsesorHasTurnoModel>>(api5);
-            turnosAsesor = AsesorTurnoFor.Where(x => x.Asesor_idAsesor == asesor.Id);
-
-
-            string? Esp1 = null;
-            string? Esp2 = null;
-            string? Esp3 = null;
-            string? Turno1 = null;
-            string? Turno2 = null;
-            string? Turno3 = null;
-
-            foreach (var ea in especialidadesAsesor)
-            {
-                if (Esp1 == null)
-                {
-                    var Especialidad = EspecialidadFor.FirstOrDefault(x => x.Id == ea.Especialidad_idEspecialidad);
-                    Esp1 = Especialidad.Nombre;
-                    break;
-                }
-                else if (Esp2 == null && Esp1 != null)
-                {
-                    var Especialidad = EspecialidadFor.FirstOrDefault(x => x.Id == ea.Especialidad_idEspecialidad);
-                    Esp2 = Especialidad.Nombre;
-                }
-                else if (Esp3 == null && Esp1 != null && Esp2 != null)
-                {
-                    var Especialidad = EspecialidadFor.FirstOrDefault(x => x.Id == ea.Especialidad_idEspecialidad);
-                    Esp3 = Especialidad.Nombre;
-                }
-            }
-
-            foreach (var ta in turnosAsesor)
-            {
-                if (Turno1 == null)
-                {
-                    var Turno = TurnoFor.FirstOrDefault(x => x.Id == ta.Turno_idTurno);
-                    Turno1 = Turno.Nombre;
-                    break;
-                }
-                else if (Turno2 == null && Turno1 != null)
-                {
-                    var Turno = TurnoFor.FirstOrDefault(x => x.Id == ta.Turno_idTurno);
-                    Turno2 = Turno.Nombre;
-                }
-                else if (Turno3 == null && Turno1 != null && Turno2 != null)
-                {
-                    var Turno = TurnoFor.FirstOrDefault(x => x.Id == ta.Turno_idTurno);
-                    Turno3 = Turno.Nombre;
-                }
-            }
-
-            solicitud.Especialidad1 = Esp1;
-            solicitud.Especialidad2 = Esp2;
-            solicitud.Especialidad3 = Esp3;
-            solicitud.Turno1 = Turno1;
-            solicitud.Turno2 = Turno2;
-            solicitud.Turno3 = Turno3;
-            solicitud.Costo = asesor.Costo;
-            solicitud.Descripcion = asesor.Descripcion;
-            solicitud.Telefono = asesor.Telefono;
-            solicitud.Facebook = asesor.Facebook;
-            solicitud.Instagram = asesor.Instagram;
-            solicitud.Linkendin = asesor.Linkendin;
-            solicitud.YouTube = asesor.Youtube;
-
-        }
-        EspecialidadFor = await http.GetFromJsonAsync<IList<EspecialidadModel>>(api);
-        TurnoFor = await http.GetFromJsonAsync<IList<TurnoModel>>(api2);
     }
 
     protected async Task Save()
@@ -246,14 +326,17 @@
         {
 
             solicitud.Tipo = "Actualizar";
-            if(solicitud.Turno2 == ""){
+            if (solicitud.Turno2 == "")
+            {
                 solicitud.Turno2 = null;
             }
-            if(solicitud.Turno3 == ""){
+            if (solicitud.Turno3 == "")
+            {
                 solicitud.Turno3 = null;
             }
             response = await http.PostAsJsonAsync<SolicitudModel>($"api/Solicitud/", solicitud!);
-
+            await OnAfterRenderAsync(true);
+            StateHasChanged();
         }
         else
         {
@@ -261,7 +344,8 @@
             response = await http.PostAsJsonAsync<SolicitudModel>($"api/Solicitud/", solicitud!);
             if (response.IsSuccessStatusCode)
             {
-
+                await OnAfterRenderAsync(true);
+                StateHasChanged();
             }
         }
 
@@ -272,4 +356,5 @@
         var result = await SessionStorage.GetAsync<int>("Id");
         return result.Success ? result.Value : 0;
     }
+
 }
